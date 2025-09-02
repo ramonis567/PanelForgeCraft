@@ -1,22 +1,26 @@
-@import "tailwindcss";
+/* @import "tailwindcss"; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --color-background: 47 51 41;      /* #2F3329 */
-  --color-foreground: 242 242 242;   /* #F2F2F2 */
-  --color-brand-600: 3 76 140;       /* #034C8C */
-  --color-brand-700: 2 48 89;        /* #023059 */
-  --color-brand-800: 21 50 77;       /* #15324D */
-  --color-brand-foreground: 255 255 255; /* #FFFFFF */
-  --color-accent-600: 188 213 57;    /* #BCD539 */
-  --color-success: 120 166 51;       /* #78A633 */
-  --color-danger: 226 0 38;          /* #E20026 */
-  --color-surface-1: 2 48 89;        /* #023059 */
-  --color-surface-2: 21 50 77;       /* #15324D */
+  --color-bg:  #00142b;
+  --color-alt-bg:  #00254e;
+  --color-foreground:  #F2F2F2;
+  --color-brand-600:  #034C8C;   
+  --color-brand-700:  #023059;    
+  --color-brand-800:  #78A633;   
+  --color-brand-foreground:  #FFFFFF;
+  --color-accent-600:  #BCD539;
+  --color-success:  #78A633;   
+  --color-danger:  #E20026;      
+  --color-surface-1:  #023059;    
+  --color-surface-2:  #15324D;   
 
   font-family: 'Segoe UI', Tahoma, Verdana, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  background-color: rgb(var(--color-brand-800));
+  background-color: var(--color-brand-600);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -28,8 +32,8 @@
 @layer base {
   html, body, #root { height: 100%; }
   body { 
-    background-color: rgb(var(--color-background));
-    color: rgb(var(--color-foreground));
+    background-color: var(--color-bg);
+    color: var(--color-foreground);
   }
 }
 
@@ -48,11 +52,6 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
 }
 
 h1 {

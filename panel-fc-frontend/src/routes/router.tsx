@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from '../pages/Home/Home';
+import Home from '../pages/Home';
 import SignInPage from '../pages/Auth/SignInPage';
-import SignUpPage from '../pages/Auth/SignUpPage';
-import PanelForgePage from '../pages/PanelForge/PanelForgePage';
-import PanelDesignPage from '../pages/PanelDesign/PanelDesignPage';
+import SignUpPage from '../pages/Auth/SignOutPage';
+import PanelForgePage from '../pages/PanelForge';
+import PanelDesignPage from '../pages/PanelDesign';
 import NotFound from '../pages/_common/NotFound';
 
 const AppRouter = () => (

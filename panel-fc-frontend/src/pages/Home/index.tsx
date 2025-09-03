@@ -4,7 +4,9 @@ function Home() {
     return (
         <AppLayout>
             <h1>Home Page</h1>
-            <p>Welcome to the Home Page!</p>
+            <div className="text-[var(--color-danger)] bg-[var(--color-alt-bg)]">
+                Se isto não ficar vermelho, Tailwind não está rodando.
+            </div>
         </AppLayout>
     );
 }

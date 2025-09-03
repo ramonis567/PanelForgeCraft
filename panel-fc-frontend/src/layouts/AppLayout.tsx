@@ -12,9 +12,9 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
-            <aside className="w-64 bg-gray-800 text-white flex flex-col">
+            <aside className="w-64 bg-red-800 text-white flex flex-col">
                 <div className="p-4 font-bold text-xl border-b border-gray-700">
-                    <img src="../assets/Logo_Act.png" alt="PanelForgeCraft" />
+                    <img src="./Logo_Act.png" alt="PanelForgeCraft" />
                 </div>
                 <nav className="flex-1 p-4 space-y-2">
                     {menuItems.map((item) => (

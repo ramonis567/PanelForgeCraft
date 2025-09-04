@@ -17,7 +17,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
             {/* Espaço superior */}
             <div>
                 {/* Logo */}
-                <div className="h-20 w-fit flex items-center justify-center p-6 border-b-2 border-[var(--color-brand-800)]">
+                <div className="h-20 w-fit flex items-center justify-center py-8 px-10 border-b-2 border-[var(--color-brand-800)]">
                     <img src="./Logo_Act.png" alt="PanelForgeCraft" className="max-h-12 " />
                 </div>
                 {/* Navegação */}
@@ -108,7 +108,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 </header>
 
                 {/* Conteúdo dinâmico */}
-                <main className="flex-1 overflow-y-auto p-2">
+                <main className="flex-1 overflow-y-auto py-3">
                     <div className="bg-[var(--color-bg)] rounded-2xl shadow-md p-4 min-h-full text-black">
                         {children}
                     </div>

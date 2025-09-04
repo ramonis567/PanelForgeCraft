@@ -1,0 +1,38 @@
+{
+  "projectId": "P-001",
+  "name": "Painel Principal",
+  "description": "Painel de distribuição geral do setor A",
+  "columns": [
+    {
+      "columnId": "C-1",
+      "type": "Alimentação",
+      "dimensions": {
+        "height": 2000,
+        "width": 400,
+        "depth": 600
+      },
+      "position": 1,
+      "modules": [
+        { "moduleId": "M-1", "name": "Disjuntor QF1", "size": "125A" }
+      ]
+    },
+    {
+      "columnId": "C-2",
+      "type": "Saídas",
+      "dimensions": {
+        "height": 2000,
+        "width": 400,
+        "depth": 600
+      },
+      "position": 2,
+      "modules": [
+        { "moduleId": "M-2", "name": "Disjuntor QF2", "size": "63A" }
+      ]
+    }
+  ],
+  "metadata": {
+    "createdBy": "ramon",
+    "createdAt": "2025-09-04T14:00:00Z",
+    "updatedAt": "2025-09-04T14:00:00Z"
+  }
+}

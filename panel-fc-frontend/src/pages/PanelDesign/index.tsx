@@ -8,6 +8,8 @@ function PanelDesignPage() {
                     Painel atual
                 </span>
             </header>
+
+            
             <h1>Panel Design Page</h1>
             <p>Welcome to the Panel Design Page!</p>
         </AppLayout>

@@ -10,7 +10,7 @@ interface ColumnDimensions {
     depth: number;
 }
 
-interface PanelColumn {
+export interface PanelColumn {
     columnId: string;
     type: string;
     dimensions: ColumnDimensions;

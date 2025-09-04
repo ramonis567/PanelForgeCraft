@@ -1,4 +1,4 @@
-interface PanelModule {
+export interface PanelModule {
     moduleId: string;
     name: string;
     size: number;

@@ -1,7 +1,10 @@
 import React, { useState } from "react";
-import { CirclePlus, Cog, X, PencilLine, Trash2, Plus } from "lucide-react";
+import { CirclePlus, Cog, PencilLine, Trash2 } from "lucide-react";
+
 import AppLayout from "../../layouts/AppLayout";
-import type { PanelConfiguration, PanelColumn, PanelModule } from "../../models/panel";
+import ColumnModal from "../../components/ColumnModal"
+
+import type { PanelConfiguration, PanelColumn } from "../../models/panel";
 
 const initialPanelConfig: PanelConfiguration = {
     id: "P-001",
@@ -22,7 +25,7 @@ function PanelForgePage() {
 
     const [newColumn, setNewColumn] = useState<Partial<PanelColumn>>({
         type: "",
-        position: config.columns.length + 1,
+        position: 1,
         dimensions: { height: 2000, width: 800, depth: 600 },
         modules: []
     });
@@ -34,94 +37,6 @@ function PanelForgePage() {
             [name]: value
         }));
     };
-
-    const handleNewColumnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-
-        if (["height", "width", "depth"].includes(name)) {
-            setNewColumn((prev) => ({
-                ...prev,
-                dimensions: {
-                    ...prev.dimensions!,
-                    [name]: Number(value)
-                }
-            }));
-        
-        } else if (name === "position") {
-            setNewColumn((prev) => ({
-                ...prev,
-                position: Number(value)
-            }));
-        } else {
-            setNewColumn((prev) => ({
-                ...prev,
-                [name]: value
-            }));
-        }
-    };
-
-    const handleAddModuleToColumn = () => {
-        setNewColumn((prev) => ({
-            ...prev,
-            modules: [...(prev.modules || []), { moduleId: `M-${Date.now()}`, name: "", size: 0 }]
-        }));
-    };
-
-    const handleModuleChange = (index: number, field: keyof PanelModule, value: string | number) => {
-        setNewColumn((prev) => {
-            const updatedModules = [...(prev.modules || [])];
-            updatedModules[index] = { ...updatedModules[index], [field]: value };
-            return { ...prev, modules: updatedModules };
-        });
-    };
-
-    const handleRemoveModule = (index: number) => {
-        setNewColumn((prev) => {
-            const updatedModules = [...(prev.modules || [])];
-            updatedModules.splice(index, 1);
-            return { ...prev, modules: updatedModules };
-        });
-    };
-
-    const handleSaveColumn = () => {
-        if (editingColumnId) {
-            setConfig((prev) => ({
-                ...prev,
-                columns: prev.columns.map((col) =>
-                    col.columnId === editingColumnId ? { ...col, ...newColumn } as PanelColumn : col
-                )
-            }));
-            setShowModal(false);
-
-        } else {
-            const columnId = `C-${Date.now()}`
-            const columnToAdd: PanelColumn = {
-                columnId,
-                type: newColumn.type || "Padrão",
-                position: newColumn.position || config.columns.length + 1,
-                dimensions: newColumn.dimensions || { height: 2000, width: 800, depth: 600 },
-                modules: newColumn.modules || []
-            };
-
-            setConfig((prev) => ({
-                ...prev,
-                columns: [...prev.columns, columnToAdd]
-            }));
-
-            setShowModal(false);
-
-            setNewColumn({
-                type: "",
-                position: config.columns.length + 2,
-                dimensions: {
-                    height: 2000,
-                    width: 800,
-                    depth: 600
-                },
-                modules: []
-            });
-        }
-    }
 
     const handleEditColumn = (column: PanelColumn) => {
        setEditingColumnId(column.columnId);
@@ -194,7 +109,16 @@ function PanelForgePage() {
                         <h3 className="text-xl font-semibold">Colunas</h3>
                         <div className="col-span-1 md:col-span-3">
                             <button 
-                                onClick={() => { setShowModal(true); setEditingColumnId(null); }}
+                                onClick={() => { 
+                                    setNewColumn({
+                                        type: "",
+                                        position: config.columns.length + 1,
+                                        dimensions: { height: 2000, width: 800, depth: 600 },
+                                        modules: []
+                                    })
+                                    setEditingColumnId(null); 
+                                    setShowModal(true); 
+                                }}
                                 className="
                                     px-4 py-2 flex items-center justify-center 
                                     gap-2 bg-[var(--color-brand-600)] text-white rounded 
@@ -280,114 +204,40 @@ function PanelForgePage() {
             </div>
 
             {/* Modal for add column */}
-            {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
-                        <button
-                            onClick={() => setShowModal(false)}
-                            className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-                        >
-                            <X size={20} />
-                        </button>
-                        <h2 className="text-xl font-semibold mb-4">Adicionar Coluna</h2>
-                        <div className="space-y-3">
-                            <div>
-                                <label className="block text-sm font-medium">Tipo</label>
-                                <input
-                                    type="text"
-                                    name="type"
-                                    value={newColumn.type || ""}
-                                    onChange={handleNewColumnChange}
-                                    className="mt-1 block w-full rounded border border-gray-200 p-2"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium">Posição</label>
-                                <input
-                                    type="number"
-                                    name="position"
-                                    value={newColumn.position || ""}
-                                    onChange={handleNewColumnChange}
-                                    className="mt-1 block w-full rounded border border-gray-200 p-2"
-                                />
-                            </div>
-                            <div className="grid grid-cols-3 gap-2">
-                                <div>
-                                    <label className="block text-sm font-medium">Altura (mm)</label>
-                                    <input
-                                        type="number"
-                                        name="height"
-                                        value={newColumn.dimensions?.height || ""}
-                                        onChange={handleNewColumnChange}
-                                        className="mt-1 block w-full rounded border border-gray-200 p-2"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium">Largura (mm)</label>
-                                    <input
-                                        type="number"
-                                        name="width"
-                                        value={newColumn.dimensions?.width || ""}
-                                        onChange={handleNewColumnChange}
-                                        className="mt-1 block w-full rounded border border-gray-200 p-2"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium">Profundidade (mm)</label>
-                                    <input
-                                        type="number"
-                                        name="depth"
-                                        value={newColumn.dimensions?.depth || ""}
-                                        onChange={handleNewColumnChange}
-                                        className="mt-1 block w-full rounded border border-gray-200 p-2"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Module list */}
-                            <div>
-                                <label className="block text-sm font-medium mb-1">Módulos</label>
-                                {(newColumn.modules || []).map((mod, idx) => (
-                                    <div key={mod.moduleId} className="flex gap-2 mb-2">
-                                        <input
-                                            type="text"
-                                            placeholder="Nome"
-                                            value={mod.name}
-                                            onChange={(e) => handleModuleChange(idx, "name", e.target.value)}
-                                            className="flex-1 rounded border border-gray-200 p-2"
-                                        />
-                                        <input
-                                            type="text"
-                                            placeholder="Tamanho"
-                                            value={mod.size}
-                                            onChange={(e) => handleModuleChange(idx, "size", e.target.value)}
-                                            className="w-24 rounded border border-gray-200 p-2"
-                                        />
-                                        <button
-                                            onClick={() => handleRemoveModule(idx)}
-                                            className="text-red-600 hover:text-red-800"
-                                        >
-                                            <X size={20} />
-                                        </button>
-                                    </div>
-                                ))}
-                                <button 
-                                    onClick={handleAddModuleToColumn}
-                                    className="mt-2 flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm"
-                                >
-                                    <Plus size={16} /> Adicionar módulo
-                                </button>
-                            </div>
-                        </div>
-                        <button
-                            onClick={handleSaveColumn}
-                            className="mt-4 px-4 py-2 bg-[var(--color-brand-600)] text-white rounded hover:bg-[var(--color-brand-700)] w-full font-semibold"
-                        >
-                            Salvar Coluna
-                        </button>
-                    </div>
-                </div>
-            )}
+            <ColumnModal 
+                isOpen={showModal}
+                column={newColumn}
+                onClose={() => setShowModal(false)}
+                onSave={(updatedColumn) => {
+                    if (editingColumnId) {
+                        setConfig(prev => ({
+                            ...prev,
+                            columns: prev.columns.map(c =>
+                                c.columnId === editingColumnId ? { ...c, ...updatedColumn } as PanelColumn : c
+                            )
+                        }));
+                    } else {
+                        const columnId = `C-${Date.now()}`;
+                        const columnToAdd: PanelColumn = {
+                            columnId,
+                            type: updatedColumn.type || "Padrão",
+                            position: updatedColumn.position || config.columns.length + 1,
+                            dimensions: updatedColumn.dimensions || { height: 2000, width: 800, depth: 600 },
+                            modules: updatedColumn.modules || []
+                        };
+                        setConfig(prev => ({ ...prev, columns: [...prev.columns, columnToAdd] }));
+                    }
+                    setShowModal(false);
+                    setEditingColumnId(null);
+                    setNewColumn({
+                        type: "",
+                        position: config.columns.length + 1,
+                        dimensions: { height: 2000, width: 800, depth: 600 },
+                        modules: []
+                    });
+                }}
+                onChange={(updates) => setNewColumn(prev => ({ ...prev, ...updates }))}
+            />
         </AppLayout>
     );
 }

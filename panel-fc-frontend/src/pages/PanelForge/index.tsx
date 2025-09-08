@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { CirclePlus, Cog, PencilLine, Trash2 } from "lucide-react";
+import { CirclePlus, Cog } from "lucide-react";
 
 import AppLayout from "../../layouts/AppLayout";
 import ColumnModal from "../../components/ColumnModal"
+import ColumnList from "../../components/ColumnList";
 
 import type { PanelConfiguration, PanelColumn } from "../../models/panel";
 
@@ -44,10 +45,16 @@ function PanelForgePage() {
         setShowModal(true);
     };
 
-    const handleDeleteColumn = (columnId: string) => {
+    const handleDeleteColumn = (column: PanelColumn) => {
+        const confirmation = confirm(`Deseja realmente excluir a coluna ${column.position}?`)
+
+        if(!confirmation) {
+            return;
+        }
+
         setConfig((prev) => ({
             ...prev,
-            columns: prev.columns.filter((c) => c.columnId !== columnId)
+            columns: prev.columns.filter((c) => c.columnId !== column.columnId)
         }));
     };
 
@@ -131,63 +138,11 @@ function PanelForgePage() {
 
                         {/* List of Columns */}
                         <div className="mt-6">
-                            <label className="block text-sm font-medium mb-2">Lista de Colunas</label>
-
-                                {config.columns.length === 0 && (
-                                    <p className="text-gray-500">Nenhuma coluna adicionada.</p>
-                                )}
-
-                                {/* <div className="
-                                    grid gap-4 grid-cols-[repeat(auto-fill, minmax(200px, 1fr))]"
-                                > */}
-                                <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                                    {config.columns.map((col) => (
-                                        <div 
-                                            key={col.columnId} 
-                                            className="
-                                                bg-white shadow-md rounded-xl p-4 
-                                                hover:shadow-lg transition-shadow flex
-                                                flex-col justify-between
-                                            "
-                                        >
-                                            <div>
-                                                <p className="font-medium text-[var(--color-brand-700)]">
-                                                    <b>Tipo:</b> {col.type}
-                                                </p>
-                                                <p>
-                                                    <b>Posição:</b> {col.position}
-                                                </p>
-                                                <p>
-                                                    <b>Dimensões:</b> {col.dimensions.height} x {col.dimensions.width} x {col.dimensions.depth} mm
-                                                </p>
-                                                <p>
-                                                    <b>Módulos:</b> {col.modules.length}
-                                                </p>
-                                            </div>
-                                            
-                                            <div className="mt-4 flex justify-end gap-2">
-                                                <button 
-                                                    onClick={() => handleEditColumn(col)} 
-                                                    className="
-                                                        px-2 py-1 text-sm
-                                                        rounded bg-[var(--color-accent-500)] text-[var(--color-success)] hover:bg-[var(--color-accent-600)]
-                                                    "
-                                                >  
-                                                    <PencilLine size={18} />
-                                                </button>
-
-                                                <button 
-                                                    onClick={() => handleDeleteColumn(col.columnId)} 
-                                                    className="
-                                                        px-2 py-1 text-sm rounded
-                                                        bg-red-100 text-red-700 hover:bg-red-200"
-                                                >
-                                                    <Trash2 size={18} />
-                                                </button>
-                                            </div>
-                                        </div>                      
-                                    ))}
-                                </div>
+                            <ColumnList 
+                                columns={config.columns}
+                                onEdit={handleEditColumn}
+                                onDelete={handleDeleteColumn}
+                            />
                         </div>
 
                         {/* Submit Button */}

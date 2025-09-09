@@ -115,8 +115,8 @@ function PanelForgePage() {
     return (
         <AppLayout>
             <header className="h-16 rounded-xl bg-[var(--color-surface-2)] border-b border-gray-200 flex items-center px-4 mb-2">
-                <span className="font-medium text-gray-800">
-                    <h1 className="text-2xl text-[var(--color-bg)]">{config.name}</h1>
+                <span className="font-medium text-gray-800 flex justify-between gap-3 w-full">
+                    <h1 className="text-2xl text-[var(--color-bg)]"><b>{config.name}</b></h1>
                     <h1 className="text-2xl text-[var(--color-bg)]">Panel Forge</h1>
                 </span>
             </header>
@@ -176,7 +176,7 @@ function PanelForgePage() {
                                     setShowModal(true); 
                                 }}
                                 className="
-                                    flex-2 px-4 py-2 flex items-center justify-center 
+                                    flex-13 px-4 py-2 flex items-center justify-center 
                                     gap-2 bg-[var(--color-brand-600)] text-white rounded 
                                     hover:bg-[var(--color-brand-700)] w-full font-semibold
                                 "
@@ -191,7 +191,7 @@ function PanelForgePage() {
                                     setConfig(initialPanelConfig);
                                 }}
                                     className="
-                                        flex-1 px-4 py-2 flex items-center justify-center 
+                                        flex-8 px-4 py-2 flex items-center justify-center 
                                         gap-2 bg-[var(--color-danger)] text-white rounded 
                                         hover:bg-red-800 font-semibold
                                     "

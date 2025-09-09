@@ -1,5 +1,5 @@
 import React from "react";
-import { PencilLine, Trash2 } from "lucide-react";
+import { PencilLine, Trash2, Tag } from "lucide-react";
 import type { PanelColumn } from "../models/panel";
 
 type Props = {
@@ -18,12 +18,12 @@ const ColumnCard: React.FC<Props> = ({ column, onEdit, onDelete, className }) =>
       }
     >
       <div>
-        <p className="font-medium text-[var(--color-brand-700)]">
-          <b>Nome:</b> {column.name}
-        </p>
-        <p>
-          <b>Típico:</b> {column.typical}
-        </p>
+        <h3 className="text-base font-semibold text-[var(--color-brand-700)] truncate">
+            {column.name || "Sem nome"}
+        </h3>
+        <div className="mt-1 inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full bg-[var(--color-surface-1)] text-[var(--color-brand-foreground)]">
+              <Tag size={12} /> {column.typical}
+        </div>
         <p>
           <b>Posição:</b> {column.position}
         </p>
@@ -39,7 +39,7 @@ const ColumnCard: React.FC<Props> = ({ column, onEdit, onDelete, className }) =>
       <div className="mt-4 flex justify-end gap-2">
         <button
           onClick={() => onEdit(column)}
-          className="px-2 py-1 text-sm rounded bg-[var(--color-accent-600)] text-[var(--color-alt-bg)] hover:opacity-90"
+          className="px-2 py-1 text-sm rounded bg-[var(--color-accent-600)] text-[var(--color-alt-bg)] hover:opacity-80"
           aria-label={`Editar coluna ${column.columnId}`}
           title="Editar"
         >

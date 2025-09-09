@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { CirclePlus, Cog } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { CirclePlus, Cog, ListRestart, Group } from "lucide-react";
 
 import AppLayout from "../../layouts/AppLayout";
 import ColumnModal from "../../components/ColumnModal"
 import ColumnList from "../../components/ColumnList";
 
 import { type PanelConfiguration, type PanelColumn, renumberColumns } from "../../models/panel";
+import { loadPanelConfig, savePanelConfig, clearPanelConfig } from "../../utils/storage";
 
 const initialPanelConfig: PanelConfiguration = {
     id: "P-001",
@@ -21,6 +22,34 @@ const initialPanelConfig: PanelConfiguration = {
 
 function PanelForgePage() {
     const [config, setConfig] = useState<PanelConfiguration>(initialPanelConfig);
+
+    // load saved
+    useEffect(() => {
+        const saved = loadPanelConfig();
+        if (saved) {
+            setConfig(saved);
+        }
+    }, []);
+
+    // save on changes
+    const saveTimeout = useRef<number | null>(null);
+    useEffect(() => {
+        if (saveTimeout.current) {
+            window.clearTimeout(saveTimeout.current);
+        }
+
+        saveTimeout.current = window.setTimeout(() => {
+            savePanelConfig(config);
+        }, 300);
+
+        return () => {
+            if (saveTimeout.current) {
+                window.clearTimeout(saveTimeout.current);
+            };
+        };
+    }, [config])
+
+    
     const [showModal, setShowModal] = useState(false);
     const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
 
@@ -58,8 +87,8 @@ function PanelForgePage() {
             return { 
                 ...prev, 
                 columns: renumberColumns(remaining),
-                metadata: { ...prev.metadata, lastModifiedAt: new Date()} 
-            }
+                metadata: { ...prev.metadata, lastModifiedAt: new Date() } 
+            };
         });
     };
 
@@ -87,7 +116,8 @@ function PanelForgePage() {
         <AppLayout>
             <header className="h-16 rounded-xl bg-[var(--color-surface-2)] border-b border-gray-200 flex items-center px-4 mb-2">
                 <span className="font-medium text-gray-800">
-                    <h1 className="text-2xl text-[var(--color-bg)]">Panel Forge  - <b>{config.name}</b></h1>
+                    <h1 className="text-2xl text-[var(--color-bg)]">{config.name}</h1>
+                    <h1 className="text-2xl text-[var(--color-bg)]">Panel Forge</h1>
                 </span>
             </header>
 
@@ -133,7 +163,7 @@ function PanelForgePage() {
 
                         {/* Add Column Button */}
                         <h3 className="text-xl font-semibold">Colunas</h3>
-                        <div className="col-span-1 md:col-span-3">
+                        <div className="col-span-1 md:col-span-3 flex gap-3">
                             <button 
                                 onClick={() => { 
                                     setNewColumn({
@@ -146,12 +176,27 @@ function PanelForgePage() {
                                     setShowModal(true); 
                                 }}
                                 className="
-                                    px-4 py-2 flex items-center justify-center 
+                                    flex-2 px-4 py-2 flex items-center justify-center 
                                     gap-2 bg-[var(--color-brand-600)] text-white rounded 
                                     hover:bg-[var(--color-brand-700)] w-full font-semibold
                                 "
                             >
                                 <CirclePlus size={28}/> ADICIONAR COLUNA
+                            </button>
+                             <button
+                                onClick={() => {
+                                    const confirmation = confirm("Deseja realmente resetar a configuração do painel?");
+                                    if (!confirmation) return;
+                                    clearPanelConfig();
+                                    setConfig(initialPanelConfig);
+                                }}
+                                    className="
+                                        flex-1 px-4 py-2 flex items-center justify-center 
+                                        gap-2 bg-[var(--color-danger)] text-white rounded 
+                                        hover:bg-red-800 font-semibold
+                                    "
+                            >
+                                <ListRestart size={28}/> RESET
                             </button>
                         </div>
 
@@ -169,9 +214,14 @@ function PanelForgePage() {
                         <div className="col-span-1 md:col-span-3">
                             <button 
                                 onClick={handleSubmit} 
-                                className="px-4 py-2 bg-[var(--color-accent-600)] text-[var(--color-alt-bg)] rounded hover:bg-[var(--color-brand-800)] w-full font-semibold"
+                                className="
+                                    flex items-center justify-center gap-3
+                                    px-4 py-2 bg-[var(--color-accent-600)] 
+                                    text-[var(--color-alt-bg)] rounded 
+                                    hover:bg-[var(--color-brand-800)] w-full font-semibold
+                                "
                             >
-                                CRIAR PAINEL
+                                <Group size={28} /> CRIAR PAINEL
                             </button>
                         </div>
                     </div>

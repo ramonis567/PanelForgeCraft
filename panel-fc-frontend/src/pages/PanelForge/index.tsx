@@ -48,7 +48,7 @@ function PanelForgePage() {
     const handleDeleteColumn = (column: PanelColumn) => {
         const confirmation = confirm(`Deseja realmente excluir a coluna ${column.position}?`)
 
-        if(!confirmation) {
+        if (!confirmation) {
             return;
         }
 
@@ -58,7 +58,24 @@ function PanelForgePage() {
         }));
     };
 
+    const handleReorderColumns = (newOrder: PanelColumn[]) => {
+        setConfig((prev) => ({
+            ...prev,
+            columns: newOrder.map((c, idx) => ({
+                ...c,
+                position: idx + 1, // <<< atualiza posição conforme a nova ordem
+            })),
+        }));
+    };
+
+
     const handleSubmit = () => {
+        const confirmation = confirm("Deseja prosseguir com este layout?")
+
+        if (!confirmation) {
+            return;
+        }
+
         console.log("Panel Configuration Submitted:", config);
 
         // In the future, send the data to the backend
@@ -142,6 +159,7 @@ function PanelForgePage() {
                                 columns={config.columns}
                                 onEdit={handleEditColumn}
                                 onDelete={handleDeleteColumn}
+                                onReorder={handleReorderColumns}
                             />
                         </div>
 

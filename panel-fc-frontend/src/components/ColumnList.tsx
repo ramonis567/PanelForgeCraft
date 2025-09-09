@@ -118,21 +118,6 @@ const ColumnList: React.FC<Props> = ({
                     </SortableContext>
 
                 </DndContext>
-
-
-
-
-                // <div className="grid gap-4 items-stretch sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-                //     {columns.map((col) => (
-                //         <ColumnCard
-                //             key={col.columnId}
-                //             column={col}
-                //             onEdit={onEdit}
-                //             onDelete={onDelete}
-                //             className="h-full"
-                //             />
-                //     ))}
-                // </div>
             )}
         </section>
     );

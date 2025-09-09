@@ -19,7 +19,10 @@ const ColumnCard: React.FC<Props> = ({ column, onEdit, onDelete, className }) =>
     >
       <div>
         <p className="font-medium text-[var(--color-brand-700)]">
-          <b>Tipo:</b> {column.type}
+          <b>Nome:</b> {column.name}
+        </p>
+        <p>
+          <b>Típico:</b> {column.typical}
         </p>
         <p>
           <b>Posição:</b> {column.position}

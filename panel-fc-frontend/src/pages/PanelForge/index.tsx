@@ -5,7 +5,7 @@ import AppLayout from "../../layouts/AppLayout";
 import ColumnModal from "../../components/ColumnModal"
 import ColumnList from "../../components/ColumnList";
 
-import type { PanelConfiguration, PanelColumn } from "../../models/panel";
+import { type PanelConfiguration, type PanelColumn, renumberColumns } from "../../models/panel";
 
 const initialPanelConfig: PanelConfiguration = {
     id: "P-001",
@@ -25,7 +25,8 @@ function PanelForgePage() {
     const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
 
     const [newColumn, setNewColumn] = useState<Partial<PanelColumn>>({
-        type: "",
+        name: "",
+        typical: "",
         position: 1,
         dimensions: { height: 2000, width: 800, depth: 600 },
         modules: []
@@ -52,19 +53,20 @@ function PanelForgePage() {
             return;
         }
 
-        setConfig((prev) => ({
-            ...prev,
-            columns: prev.columns.filter((c) => c.columnId !== column.columnId)
-        }));
+        setConfig(prev => {
+            const remaining = prev.columns.filter(c => c.columnId !== column.columnId);
+            return { 
+                ...prev, 
+                columns: renumberColumns(remaining),
+                metadata: { ...prev.metadata, lastModifiedAt: new Date()} 
+            }
+        });
     };
 
     const handleReorderColumns = (newOrder: PanelColumn[]) => {
         setConfig((prev) => ({
             ...prev,
-            columns: newOrder.map((c, idx) => ({
-                ...c,
-                position: idx + 1, // <<< atualiza posição conforme a nova ordem
-            })),
+            columns: renumberColumns(newOrder)
         }));
     };
 
@@ -135,7 +137,7 @@ function PanelForgePage() {
                             <button 
                                 onClick={() => { 
                                     setNewColumn({
-                                        type: "",
+                                        typical: "",
                                         position: config.columns.length + 1,
                                         dimensions: { height: 2000, width: 800, depth: 600 },
                                         modules: []
@@ -182,28 +184,40 @@ function PanelForgePage() {
                 column={newColumn}
                 onClose={() => setShowModal(false)}
                 onSave={(updatedColumn) => {
-                    if (editingColumnId) {
-                        setConfig(prev => ({
-                            ...prev,
-                            columns: prev.columns.map(c =>
-                                c.columnId === editingColumnId ? { ...c, ...updatedColumn } as PanelColumn : c
-                            )
-                        }));
-                    } else {
-                        const columnId = `C-${Date.now()}`;
-                        const columnToAdd: PanelColumn = {
-                            columnId,
-                            type: updatedColumn.type || "Padrão",
-                            position: updatedColumn.position || config.columns.length + 1,
-                            dimensions: updatedColumn.dimensions || { height: 2000, width: 800, depth: 600 },
-                            modules: updatedColumn.modules || []
-                        };
-                        setConfig(prev => ({ ...prev, columns: [...prev.columns, columnToAdd] }));
-                    }
+                    setConfig((prev) => {
+                        if (editingColumnId) {
+                            const edited = prev.columns.map(c =>
+                                c.columnId === editingColumnId 
+                                ? { ...c, ...updatedColumn, name: updatedColumn.name || c.name } as PanelColumn 
+                                : c
+                            );
+
+                            const sorted = [...edited].sort((a, b) => a.position - b.position);
+                            const renumbered = renumberColumns(sorted);
+
+                            return { ...prev, columns: renumbered, metadata: { ...prev.metadata, lastModifiedAt: new Date() }};
+                        } else {
+                            const columnId = `C-${Date.now()}`;
+                            const columnToAdd: PanelColumn = {
+                                columnId,
+                                name: updatedColumn.name || `Coluna ${prev.columns.length + 1}`,
+                                typical: updatedColumn.typical || "Padrão",
+                                position: config.columns.length + 1,
+                                dimensions: updatedColumn.dimensions || { height: 2000, width: 800, depth: 600 },
+                                modules: updatedColumn.modules || []
+                            };
+
+                            const afterAdd = [...prev.columns, columnToAdd];
+                            const renumbered = renumberColumns(afterAdd);
+
+                            return { ...prev, columns: renumbered, metadata: { ...prev.metadata, lastModifiedAt: new Date() }};
+                        }
+                    });
+                    
                     setShowModal(false);
                     setEditingColumnId(null);
                     setNewColumn({
-                        type: "",
+                        typical: "",
                         position: config.columns.length + 1,
                         dimensions: { height: 2000, width: 800, depth: 600 },
                         modules: []

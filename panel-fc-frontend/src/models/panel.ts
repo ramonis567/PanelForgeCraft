@@ -12,7 +12,8 @@ interface ColumnDimensions {
 
 export interface PanelColumn {
     columnId: string;
-    type: string;
+    name: string;
+    typical: string;
     dimensions: ColumnDimensions;
     position: number;
     modules: PanelModule[];
@@ -31,3 +32,6 @@ export interface PanelConfiguration {
     columns: PanelColumn[];
     metadata: PanelMetadata;
 }
+
+export const renumberColumns = (cols: PanelColumn[]) =>
+    cols.map((c, idx) => ({ ...c, position: idx + 1}));

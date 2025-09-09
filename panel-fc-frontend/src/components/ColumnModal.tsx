@@ -2,7 +2,6 @@ import React from "react";
 import { X, Plus } from "lucide-react";
 import type { PanelColumn, PanelModule } from "../models/panel";
 
-
 interface ColumnModalProps {
     isOpen: boolean;
     column: Partial<PanelColumn>;
@@ -75,12 +74,22 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
 
                 <div className="space-y-3">
                     <div>
-                        <label className="block text-sm font-medium">Tipo</label>
+                        <label className="block text-sm font-medium">Nome da Coluna</label>
                         <input
                             type="text"
-                            name="type"
-                            value={column.type || ""}
-                            onChange={handleFieldChange}
+                            name="name"
+                            value={column.name || ""}
+                            onChange={(e) => onChange({ name: e.target.value })}
+                            className="mt-1 block w-full rounded border border-gray-200 p-2"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium">Típico</label>
+                        <input
+                            type="text"
+                            name="typical"
+                            value={column.typical || ""}
+                            onChange={(e) => onChange({ typical: e.target.value })}
                             className="mt-1 block w-full rounded border border-gray-200 p-2"
                         />
                     </div>
@@ -89,9 +98,10 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
                         <input
                             type="number"
                             name="position"
+                            disabled
                             value={column.position || ""}
                             onChange={handleFieldChange}
-                            className="mt-1 block w-full rounded border border-gray-200 p-2"
+                            className="mt-1 block w-full rounded border bg-gray-200 border-gray-300 p-2 "
                         />
                     </div>
                     <div className="grid grid-cols-3 gap-2">

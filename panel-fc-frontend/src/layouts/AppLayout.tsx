@@ -9,7 +9,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     const menuItems = [
         { label: "Página Inicial", path: "/", icons: <House size={28} /> },
         { label: "Configurar Painéis", path: "/panel-forge", icons: <Columns3Cog size={28} /> },
-        { label: "Visualizar Painéis", path: "/panel-design", icons: <Columns3 size={28} /> }
+        { label: "Visualizar Painéis", path: "/panel-view", icons: <Columns3 size={28} /> }
     ];
 
     const sidebarContent = (

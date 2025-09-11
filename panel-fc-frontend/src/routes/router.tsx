@@ -3,7 +3,7 @@ import Home from '../pages/Home';
 import SignInPage from '../pages/Auth/SignInPage';
 import SignUpPage from '../pages/Auth/SignOutPage';
 import PanelForgePage from '../pages/PanelForge';
-import PanelDesignPage from '../pages/PanelDesign';
+import PanelViewPage from '../pages/PanelView';
 import NotFound from '../pages/_common/NotFound';
 
 const AppRouter = () => (
@@ -13,7 +13,7 @@ const AppRouter = () => (
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/panel-forge" element={<PanelForgePage />} />
-            <Route path="/panel-design" element={<PanelDesignPage />} />
+            <Route path="/panel-view" element={<PanelViewPage />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     </Router>

@@ -30,7 +30,7 @@ export function savePanel(panel: PanelConfiguration) {
 	const panels = loadAllPanels();
 	const idx = panels.findIndex(p => p.id === panel.id);
 
-	console.log(panels)
+	// console.log(panels)
 
 	if (idx >= 0) {
 		panels[idx] = panel;

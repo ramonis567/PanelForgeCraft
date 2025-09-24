@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { CirclePlus, Cog, ListRestart, Group } from "lucide-react";
 
 import AppLayout from "../../layouts/AppLayout";
@@ -9,47 +10,52 @@ import { type PanelConfiguration, type PanelColumn, renumberColumns } from "../.
 import { loadPanel, savePanel, clearPanelConfig } from "../../utils/storage";
 
 const initialPanelConfig: PanelConfiguration = {
-    id: "P-001",
+    id: "",
     name: "",
     description: "",
     columns: [],
     metadata: {
-        createdBy: "Usuário",
+        createdBy: "User",
         createdAt: new Date(),
         lastModifiedAt: new Date()
     }
 }
 
 function PanelForgePage() {
+    let params = useParams();
+    const panelId = params.panelId;
+
+    const navigate = useNavigate();
     const [config, setConfig] = useState<PanelConfiguration>(initialPanelConfig);
 
-    // load saved
     useEffect(() => {
-        const saved = loadPanel();
-        if (saved) {
-            setConfig(saved);
-        }
-    }, []);
+        if(!panelId) return;
+        console.log(panelId)
+        const loaded = loadPanel(panelId);
 
-    // save on changes
-    const saveTimeout = useRef<number | null>(null);
-    useEffect(() => {
-        if (saveTimeout.current) {
-            window.clearTimeout(saveTimeout.current);
-        }
+        setConfig(loaded ?? initialPanelConfig);
 
-        saveTimeout.current = window.setTimeout(() => {
-            savePanelConfig(config);
-        }, 300);
+    }, [panelId]);
 
-        return () => {
-            if (saveTimeout.current) {
-                window.clearTimeout(saveTimeout.current);
-            };
-        };
-    }, [config])
+    // const saveTimeout = useRef<number | null>(null);
+    // useEffect(() => {
+    //     if (!config.id) return;
 
-    
+    //     if (saveTimeout.current) {
+    //         window.clearTimeout(saveTimeout.current);
+    //     }
+
+    //     saveTimeout.current = window.setTimeout(() => {
+    //         savePanel(config);
+    //     }, 300);
+
+    //     return () => {
+    //         if (saveTimeout.current) {
+    //             window.clearTimeout(saveTimeout.current);
+    //         };
+    //     };
+    // }, [config])
+
     const [showModal, setShowModal] = useState(false);
     const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
 
@@ -70,7 +76,7 @@ function PanelForgePage() {
     };
 
     const handleEditColumn = (column: PanelColumn) => {
-       setEditingColumnId(column.columnId);
+        setEditingColumnId(column.columnId);
         setNewColumn({ ...column });
         setShowModal(true);
     };
@@ -106,6 +112,8 @@ function PanelForgePage() {
         if (!confirmation) {
             return;
         }
+
+        savePanel(config);
 
         console.log("Panel Configuration Submitted: ", config);
 
@@ -188,7 +196,7 @@ function PanelForgePage() {
                                     const confirmation = confirm("Deseja realmente resetar a configuração do painel?");
                                     if (!confirmation) return;
                                     clearPanelConfig("TO DO");
-                                    setConfig(initialPanelConfig);
+                                    // setConfig(initialPanelConfig);
                                 }}
                                     className="
                                         flex-8 px-4 py-2 flex items-center justify-center 

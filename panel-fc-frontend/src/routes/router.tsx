@@ -12,8 +12,8 @@ const AppRouter = () => (
             <Route path="/" element={<Home />} />
             <Route path="/signin" element={<SignInPage />} />
             <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/panel-forge" element={<PanelForgePage />} />
-            <Route path="/panel-view" element={<PanelViewPage />} />
+            <Route path="/panel-forge/:panelId" element={<PanelForgePage />} />
+            <Route path="/panel-view/:panelId" element={<PanelViewPage />} />
             <Route path="*" element={<NotFound />} />
         </Routes>
     </Router>

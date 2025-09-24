@@ -6,7 +6,7 @@ import ColumnModal from "../../components/ColumnModal"
 import ColumnList from "../../components/ColumnList";
 
 import { type PanelConfiguration, type PanelColumn, renumberColumns } from "../../models/panel";
-import { loadPanelConfig, savePanelConfig, clearPanelConfig } from "../../utils/storage";
+import { loadPanel, savePanel, clearPanelConfig } from "../../utils/storage";
 
 const initialPanelConfig: PanelConfiguration = {
     id: "P-001",
@@ -25,7 +25,7 @@ function PanelForgePage() {
 
     // load saved
     useEffect(() => {
-        const saved = loadPanelConfig();
+        const saved = loadPanel();
         if (saved) {
             setConfig(saved);
         }
@@ -101,13 +101,13 @@ function PanelForgePage() {
 
 
     const handleSubmit = () => {
-        const confirmation = confirm("Deseja prosseguir com este layout?")
+        const confirmation = confirm(`Deseja prosseguir com este layout?`)
 
         if (!confirmation) {
             return;
         }
 
-        console.log("Panel Configuration Submitted:", config);
+        console.log("Panel Configuration Submitted: ", config);
 
         // In the future, send the data to the backend
     }
@@ -187,7 +187,7 @@ function PanelForgePage() {
                                 onClick={() => {
                                     const confirmation = confirm("Deseja realmente resetar a configuração do painel?");
                                     if (!confirmation) return;
-                                    clearPanelConfig();
+                                    clearPanelConfig("TO DO");
                                     setConfig(initialPanelConfig);
                                 }}
                                     className="
@@ -221,7 +221,7 @@ function PanelForgePage() {
                                     hover:bg-[var(--color-brand-800)] w-full font-semibold
                                 "
                             >
-                                <Group size={28} /> CRIAR PAINEL
+                                <Group size={28} /> SALVAR PAINEL
                             </button>
                         </div>
                     </div>

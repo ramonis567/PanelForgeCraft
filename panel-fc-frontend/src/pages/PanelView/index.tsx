@@ -89,24 +89,22 @@ const PanelViewPage: React.FC = () => {
                             <p>VOLTAR</p>
                         </button>
                     </div>
-                    <h1 className="text-2xl text-[var(--color-bg)]">{}</h1>
+                    <h1 className="text-2xl text-[var(--color-bg)]">{config.name}</h1>
                     <h1 className="text-2xl text-[var(--color-bg)]">Panel View</h1>
                 </span>
             </header>
 
             {/* Metadados */}
-            <div className="px-4 py-2 mb-2 bg-gray-50 border border-gray-200 rounded">
-                <h2 className="text-xl font-bold text-[var(--color-brand-800)]">{config.name || "Sem nome"}</h2>
-                <p className="text-gray-600">{config.description || "Sem descrição"}</p>
+            <div className="px-4 py-1 mb-2 bg-gray-50 border border-gray-200 rounded">
+                <p className="text-gray-600"><b>Descrição: </b>{config.description || "Sem descrição"}</p>
                 <div className="text-sm text-gray-500 mt-1">
                     <p><b>Criado por:</b> {config.metadata.createdBy}</p>
-                    <p><b>Criado em:</b> {new Date(config.metadata.createdAt).toLocaleString()}</p>
                     <p><b>Última modificação:</b> {new Date(config.metadata.lastModifiedAt).toLocaleString()}</p>
                 </div>
             </div>
 
             {/* Toolbar */}
-            <div className="flex items-center justify-evenly gap-3 px-4 py-2 bg-gray-50 border border-gray-200 rounded mb-1">
+            <div className="flex items-center justify-evenly gap-3 px-4 py-1 bg-gray-50 border border-gray-200 rounded mb-1">
                 <div className="flex items-center gap-1"> 
                         <button
                             className="px-1 py-1 rounded bg-white hover:bg-gray-100 

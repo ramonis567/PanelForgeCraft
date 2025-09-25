@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Eye, Pencil, Trash2, Copy } from 'lucide-react';
 
-import AppLayout from '../../layouts/AppLayout';
+import AppLayout from '../_common/layouts/AppLayout';
 import type { PanelConfiguration } from '../../models/panel';
 import { loadAllPanels, savePanel, deletePanel } from '../../utils/storage';
 import { createBlankPanel, generatePanelId } from '../../utils/initPanel';

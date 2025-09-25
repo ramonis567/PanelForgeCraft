@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CirclePlus, Cog, ListRestart, Group, House, Eye } from "lucide-react";
 
-import AppLayout from "../../layouts/AppLayout";
+import AppLayout from "../_common/layouts/AppLayout";
 import ColumnModal from "../../components/ColumnModal"
 import ColumnList from "../../components/ColumnList";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight, House, Pen } from "lucide-react";
 
-import AppLayout from "../../layouts/AppLayout";
+import AppLayout from "../_common/layouts/AppLayout";
 import type { PanelColumn, PanelConfiguration } from "../../models/panel";
 
 import { loadPanel } from "../../utils/storage";

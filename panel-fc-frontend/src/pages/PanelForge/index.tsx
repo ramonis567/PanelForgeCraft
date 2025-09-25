@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CirclePlus, Cog, ListRestart, Group } from "lucide-react";
+import { CirclePlus, Cog, ListRestart, Group, ChevronLeftCircle } from "lucide-react";
 
 import AppLayout from "../../layouts/AppLayout";
 import ColumnModal from "../../components/ColumnModal"
@@ -121,6 +121,19 @@ function PanelForgePage() {
         <AppLayout>
             <header className="h-16 rounded-xl bg-[var(--color-surface-2)] border-b border-gray-200 flex items-center px-4 mb-2">
                 <span className="font-medium text-gray-800 flex justify-between gap-3 w-full">
+                    <div className="gap-2 items-center">
+                        <button
+                            onClick={() => navigate("/")}
+                            className="flex justify-center items-center gap-2 
+                                px-2 py-1 bg-[var(--color-accent-600)] 
+                                hover:bg-[var(--color-accent-500)] rounded 
+                                text-semibold text-[var(--color-surface-1)] 
+                                font-medium text-l"
+                        >
+                            <ChevronLeftCircle size={22} />
+                            <p>VOLTAR</p>
+                        </button>
+                    </div>                          
                     <h1 className="text-2xl text-[var(--color-bg)]"><b>{config.name}</b></h1>
                     <h1 className="text-2xl text-[var(--color-bg)]">Panel Forge</h1>
                 </span>
@@ -143,7 +156,7 @@ function PanelForgePage() {
                         {/* Panel Name Input */}
                         <div>
                             <label className="block text-sm font-medium">Nome do Painel</label>
-                            <input 
+                            <input
                                 type="text" 
                                 name="name"
                                 placeholder="Insira nome para o painel..."

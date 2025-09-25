@@ -27,6 +27,7 @@ type Props = {
   onEdit: (column: PanelColumn) => void;
   onDelete: (column: PanelColumn) => void;
   onReorder: (newOrder: PanelColumn[]) => void;
+  onDuplicate: (column: PanelColumn) => void;
   title?: string;
   className?: string;   // for custom design
 };
@@ -41,9 +42,10 @@ const SortableColumnCard: React.FC<{
     column: PanelColumn;
     onEdit: (c: PanelColumn) => void;
     onDelete: (id: string) => void;
-}> = ({ column, onEdit, onDelete }) => {
-    
-    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = 
+    onDuplicate: (c: PanelColumn) => void;
+}> = ({ column, onEdit, onDelete, onDuplicate }) => {
+
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({ id: column.columnId });
 
 
@@ -59,21 +61,20 @@ const SortableColumnCard: React.FC<{
                 column={column}
                 onEdit={onEdit}
                 onDelete={() => onDelete(column.columnId)}
+                onDuplicate={onDuplicate}
             />
         </div>
-    
     );
-
 };
 
 const ColumnList: React.FC<Props> = ({ 
     columns, 
     onEdit, 
     onDelete,
+    onDuplicate,
     onReorder,
     className, 
 }) => {
-
     const sensors = useSensors(
         useSensor(PointerSensor, {activationConstraint: { distance: 6 }})
     );
@@ -91,7 +92,6 @@ const ColumnList: React.FC<Props> = ({
         const newOrder = arrayMove(columns, oldIndex, newIndex);
         onReorder(newOrder); 
     };
-
 
     return (
         <section className={className}>
@@ -112,11 +112,11 @@ const ColumnList: React.FC<Props> = ({
                                     column={col}
                                     onEdit={onEdit}
                                     onDelete={() => onDelete(col)}
+                                    onDuplicate={onDuplicate}
                                 />
                             ))}
                         </div>
                     </SortableContext>
-
                 </DndContext>
             )}
         </section>

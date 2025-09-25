@@ -30,31 +30,11 @@ function PanelForgePage() {
 
     useEffect(() => {
         if(!panelId) return;
-        console.log(panelId)
         const loaded = loadPanel(panelId);
 
         setConfig(loaded ?? initialPanelConfig);
 
     }, [panelId]);
-
-    // const saveTimeout = useRef<number | null>(null);
-    // useEffect(() => {
-    //     if (!config.id) return;
-
-    //     if (saveTimeout.current) {
-    //         window.clearTimeout(saveTimeout.current);
-    //     }
-
-    //     saveTimeout.current = window.setTimeout(() => {
-    //         savePanel(config);
-    //     }, 300);
-
-    //     return () => {
-    //         if (saveTimeout.current) {
-    //             window.clearTimeout(saveTimeout.current);
-    //         };
-    //     };
-    // }, [config])
 
     const [showModal, setShowModal] = useState(false);
     const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
@@ -105,7 +85,6 @@ function PanelForgePage() {
         }));
     };
 
-
     const handleSubmit = () => {
         const confirmation = confirm(`Deseja prosseguir com este layout?`)
 
@@ -115,10 +94,28 @@ function PanelForgePage() {
 
         savePanel(config);
 
-        console.log("Panel Configuration Submitted: ", config);
-
         // In the future, send the data to the backend
-    }
+    };
+
+    const handleDuplicateColumn = (column: PanelColumn) => {
+        setConfig(prev => {
+            const duplicated: PanelColumn = {
+                ...column,
+                columnId: `C-${Date.now()}`,
+                position: column.position + 1,
+                name: `${column.name} (Cópia)`
+            };
+
+            const newCols = [...prev.columns, duplicated];
+            const renumbered = renumberColumns(newCols);
+
+            return {
+                ...prev,
+                columns: renumbered,
+                metadata: { ...prev.metadata, lastModifiedAt: new Date() }
+            };
+        });
+    };
 
     return (
         <AppLayout>
@@ -195,8 +192,11 @@ function PanelForgePage() {
                                 onClick={() => {
                                     const confirmation = confirm("Deseja realmente resetar a configuração do painel?");
                                     if (!confirmation) return;
-                                    clearPanelConfig("TO DO");
-                                    // setConfig(initialPanelConfig);
+                                    clearPanelConfig(panelId ?? "");
+                                    setConfig(prev => ({
+                                        ...initialPanelConfig,
+                                        id: prev.id
+                                    }));
                                 }}
                                     className="
                                         flex-8 px-4 py-2 flex items-center justify-center 
@@ -215,6 +215,7 @@ function PanelForgePage() {
                                 onEdit={handleEditColumn}
                                 onDelete={handleDeleteColumn}
                                 onReorder={handleReorderColumns}
+                                onDuplicate={handleDuplicateColumn}
                             />
                         </div>
 

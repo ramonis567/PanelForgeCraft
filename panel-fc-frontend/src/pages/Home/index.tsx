@@ -68,7 +68,7 @@ const Home = () => {
                         <div className='col-span-3 font-semibold text-gray-700'>ID</div>
                         <div className="col-span-6 font-semibold text-gray-700">Nome</div>
                         <div className="col-span-11 font-semibold text-gray-700">Descrição</div>
-                        <div className="col-span-4 font-semibold text-gray-700">Ações</div>
+                        <div className="col-span-4 font-semibold text-gray-700 justify-self-end">Ações</div>
                     </div>
                     <div>
                         {panels.map(panel => (

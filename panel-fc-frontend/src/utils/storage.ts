@@ -51,5 +51,11 @@ export function getCurrentPanelId(): string | null {
 }
 
 export function clearPanelConfig(id: string) {
-	console.log("TO DO");
+	const panels = loadAllPanels();
+	const idx = panels.findIndex(p => p.id === id);
+
+	if (idx >= 0) {
+		panels[idx] = { id: panels[idx].id } as PanelConfiguration;
+		saveAllPanels(panels);
+	}
 }

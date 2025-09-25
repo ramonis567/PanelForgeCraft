@@ -1,15 +1,16 @@
 import React from "react";
-import { PencilLine, Trash2, Tag } from "lucide-react";
+import { PencilLine, Trash2, Tag, BookCopy } from "lucide-react";
 import type { PanelColumn } from "../models/panel";
 
 type Props = {
     column: PanelColumn;
     onEdit: (column: PanelColumn) => void;
     onDelete: (column: PanelColumn) => void;
+    onDuplicate: (column: PanelColumn) => void;
     className?: string;
 }
 
-const ColumnCard: React.FC<Props> = ({ column, onEdit, onDelete, className }) => {
+const ColumnCard: React.FC<Props> = ({ column, onEdit, onDelete, onDuplicate, className }) => {
   return (
     <div
       className={
@@ -44,6 +45,15 @@ const ColumnCard: React.FC<Props> = ({ column, onEdit, onDelete, className }) =>
           title="Editar"
         >
           <PencilLine size={18} />
+        </button>
+
+        <button
+          onClick={() => onDuplicate(column)}
+          className="px-2 py-1 text-sm rounded bg-[var(--color-blue-300)] text-[var(--color-alt-bg)] hover:opacity-80"
+          aria-label={`Duplicar coluna ${column.columnId}`}
+          title="Duplicar"
+        >
+          <BookCopy size={18} />
         </button>
 
         <button

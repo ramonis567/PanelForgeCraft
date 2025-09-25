@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight, ChevronLeftCircle } from "lucide-react";
+import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight, House, Pen } from "lucide-react";
 
 import AppLayout from "../../layouts/AppLayout";
 import type { PanelColumn, PanelConfiguration } from "../../models/panel";
@@ -76,7 +76,7 @@ const PanelViewPage: React.FC = () => {
             {/* Header */}
             <header className="h-16 rounded-xl bg-[var(--color-surface-2)] border-b border-gray-200 flex items-center px-4 mb-2">
                 <span className="font-medium text-gray-800 flex justify-between gap-3 w-full">
-                    <div className="gap-2 items-center">
+                    <div className="gap-2 items-center flex">
                         <button
                             onClick={() => navigate("/")}
                             className="flex justify-center items-center gap-2 
@@ -85,11 +85,22 @@ const PanelViewPage: React.FC = () => {
                                 text-semibold text-[var(--color-surface-1)] 
                                 font-medium text-l"
                         >
-                            <ChevronLeftCircle size={22} />
-                            <p>VOLTAR</p>
+                            <House size={22} />
+                            <p>HOME</p>
+                        </button>
+                        <button
+                            onClick={() => navigate(`/panel-forge/${panelId}`)}
+                            className="flex justify-center items-center gap-2 
+                                px-2 py-1 bg-red-500 
+                                hover:bg-red-700 rounded 
+                                text-semibold text-[var(--color-bg)] 
+                                font-medium text-l"
+                        >
+                            <Pen size={22} />
+                            <p>EDITAR</p>
                         </button>
                     </div>
-                    <h1 className="text-2xl text-[var(--color-bg)]">{config.name}</h1>
+                    <h1 className="text-2xl text-[var(--color-bg)]"><b>{config.name}</b></h1>
                     <h1 className="text-2xl text-[var(--color-bg)]">Panel View</h1>
                 </span>
             </header>

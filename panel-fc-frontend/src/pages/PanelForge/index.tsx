@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CirclePlus, Cog, ListRestart, Group, ChevronLeftCircle } from "lucide-react";
+import { CirclePlus, Cog, ListRestart, Group, House, Eye } from "lucide-react";
 
 import AppLayout from "../../layouts/AppLayout";
 import ColumnModal from "../../components/ColumnModal"
@@ -121,7 +121,7 @@ function PanelForgePage() {
         <AppLayout>
             <header className="h-16 rounded-xl bg-[var(--color-surface-2)] border-b border-gray-200 flex items-center px-4 mb-2">
                 <span className="font-medium text-gray-800 flex justify-between gap-3 w-full">
-                    <div className="gap-2 items-center">
+                    <div className="gap-1 items-center flex">
                         <button
                             onClick={() => navigate("/")}
                             className="flex justify-center items-center gap-2 
@@ -130,8 +130,19 @@ function PanelForgePage() {
                                 text-semibold text-[var(--color-surface-1)] 
                                 font-medium text-l"
                         >
-                            <ChevronLeftCircle size={22} />
-                            <p>VOLTAR</p>
+                            <House size={22} />
+                            <p>HOME</p>
+                        </button>
+                        <button
+                            onClick={() => navigate(`/panel-view/${panelId}`)}
+                            className="flex justify-center items-center gap-2 
+                                px-2 py-1 bg-red-500 
+                                hover:bg-red-700 rounded 
+                                text-semibold text-[var(--color-bg)] 
+                                font-medium text-l"
+                        >
+                            <Eye size={22} />
+                            <p>PREVIEW</p>
                         </button>
                     </div>                          
                     <h1 className="text-2xl text-[var(--color-bg)]"><b>{config.name}</b></h1>

@@ -23,17 +23,28 @@ function AppLayout({ children }: { children: React.ReactNode }) {
                 {/* Navegação */}
                 <nav className="flex-1 p-6 space-y-2 px-1 w-full">
                     {menuItems.map((item) => {
-                        const isActive = location.pathname === item.path;
+                        const isActive = location.pathname.includes(item.path) && item.path !== "/" || (item.path === "/" && location.pathname === "/");
+                        const isHome = location.pathname === "/";
+                        const isConfigOrView = item.path === "/panel-forge" || item.path === "/panel-view";
+                        const isDisabled = isHome && isConfigOrView;
 
                         return (
                             <Link
                                 key={item.path}
                                 to={item.path}
+                                onClick={(e) => {
+                                    if (isDisabled) e.preventDefault();
+                                }}
                                 className={`flex items-center gap-3 text-lg p-4 rounded-lg ${
                                     isActive
                                         ? "bg-[var(--color-foreground)] text-[var(--color-brand-foreground)] font-semibold"
                                         : "text-gray-200 hover:bg-[var(--color-surface-1)] hover:text-white"
-                                }`}
+                                    }` + 
+                                    (isDisabled 
+                                        ? " opacity-50 cursor-not-allowed hover:bg-[var(--color-surface-2)] hover:text-gray-400" 
+                                        : ""
+                                    )
+                                }
                             >
                                 <span className="inline-block mr-2 align-middle">
                                     {item.icons}

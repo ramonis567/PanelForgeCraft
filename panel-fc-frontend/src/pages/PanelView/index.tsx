@@ -1,85 +1,38 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight, ChevronLeftCircle } from "lucide-react";
+
 import AppLayout from "../../layouts/AppLayout";
-import type { PanelConfiguration, PanelColumn } from "../../models/panel";
-import { loadPanelConfig } from "../../utils/storage";
-import { ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from "lucide-react";
+import type { PanelColumn, PanelConfiguration } from "../../models/panel";
 
-type ColumnLike = {
-    columnId: string;
-    type: string;
-    dimensions: { width: number; height: number; depth: number };
-    position: number;
-    modules: any[];
-}
-
+import { loadPanel } from "../../utils/storage";
 
 const PanelViewPage: React.FC = () => {
-    const [zoom, setZoom] = useState(0.9);
+    let params = useParams();
+    const panelId = params.panelId;
+
+    const navigate = useNavigate();
+
     const containerRef = useRef<HTMLDivElement | null>(null);
+    const [zoom, setZoom] = useState(0.9);
     const [page, setPage] = useState(0);
     
     const pageWidthMM = 3000;
 
     const [config, setConfig] = useState<PanelConfiguration | null>(null);
 
-    const columns = [
-        {
-            "columnId": "C-1",
-            "type": "Alimentação",
-            "dimensions": {
-                "height": 2000,
-                "width": 2000,
-                "depth": 600
-            },
-            "position": 1,
-            "modules": [
-                { 
-                    "moduleId": "M-1", 
-                    "name": "Disjuntor QF1", 
-                    "size": "125A" 
-                }
-            ]
-        },
-        {
-            "columnId": "C-2",
-            "type": "Saídas",
-            "dimensions": {
-                "height": 2000,
-                "width": 400,
-                "depth": 600
-            },
-            "position": 2,
-            "modules": [
-                { 
-                    "moduleId": "M-2", 
-                    "name": "Disjuntor QF2", 
-                    "size": "63A" 
-                }
-            ]
-        },
-        {
-            "columnId": "C-3",
-            "type": "Saídas",
-            "dimensions": {
-                "height": 2100,
-                "width": 1800,
-                "depth": 600
-            },
-            "position": 3,
-            "modules": [
-                { 
-                    "moduleId": "M-2", 
-                    "name": "Disjuntor QF2", 
-                    "size": "63A" 
-                }
-            ]
-        }
-    ]
+    useEffect(() => {
+        if(!panelId) return;
+        const loaded = loadPanel(panelId);
 
-    // REMEMBER TO CHANGE WHEN IMPORT CONFIG DATA
-    const paginateColumns = (columns: ColumnLike[], pageWidth: number) =>{
-        const pages: ColumnLike[][] = [];
-        let current: ColumnLike[] = [];
+        setConfig(loaded || null);     
+    }, [panelId]);
+
+    const columns = config?.columns ?? [];
+
+    const paginateColumns = (columns: PanelColumn[], pageWidth: number) =>{
+        const pages: PanelColumn[][] = [];
+        let current: PanelColumn[] = [];
         let currentWidth = 0;
 
         for (const col of columns) {
@@ -103,21 +56,54 @@ const PanelViewPage: React.FC = () => {
     const currentColumns = pages[page] || [];
 
     const widthSum = currentColumns.reduce((sum, col) => sum + col.dimensions.width, 0);
-    const totalWidth = Math.max(pageWidthMM, columns.reduce((sum, c) => sum + c.dimensions.width, 0) + 0);
     const maxHeight = Math.max(...columns.map(c => c.dimensions.height)) + 0;
 
     const marginX = pageWidthMM * 0.15;
     const marginY = maxHeight * 0.1;
+
+    if(!config) {
+        return (
+            <AppLayout>
+                <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                    <p>Carregando painel...</p>
+                </div>
+            </AppLayout>
+        );
+    };
 
     return(
         <AppLayout>
             {/* Header */}
             <header className="h-16 rounded-xl bg-[var(--color-surface-2)] border-b border-gray-200 flex items-center px-4 mb-2">
                 <span className="font-medium text-gray-800 flex justify-between gap-3 w-full">
+                    <div className="gap-2 items-center">
+                        <button
+                            onClick={() => navigate("/")}
+                            className="flex justify-center items-center gap-2 
+                                px-2 py-1 bg-[var(--color-accent-600)] 
+                                hover:bg-[var(--color-accent-500)] rounded 
+                                text-semibold text-[var(--color-surface-1)] 
+                                font-medium text-l"
+                        >
+                            <ChevronLeftCircle size={22} />
+                            <p>VOLTAR</p>
+                        </button>
+                    </div>
                     <h1 className="text-2xl text-[var(--color-bg)]">{}</h1>
                     <h1 className="text-2xl text-[var(--color-bg)]">Panel View</h1>
                 </span>
             </header>
+
+            {/* Metadados */}
+            <div className="px-4 py-2 mb-2 bg-gray-50 border border-gray-200 rounded">
+                <h2 className="text-xl font-bold text-[var(--color-brand-800)]">{config.name || "Sem nome"}</h2>
+                <p className="text-gray-600">{config.description || "Sem descrição"}</p>
+                <div className="text-sm text-gray-500 mt-1">
+                    <p><b>Criado por:</b> {config.metadata.createdBy}</p>
+                    <p><b>Criado em:</b> {new Date(config.metadata.createdAt).toLocaleString()}</p>
+                    <p><b>Última modificação:</b> {new Date(config.metadata.lastModifiedAt).toLocaleString()}</p>
+                </div>
+            </div>
 
             {/* Toolbar */}
             <div className="flex items-center justify-evenly gap-3 px-4 py-2 bg-gray-50 border border-gray-200 rounded mb-1">
@@ -125,7 +111,6 @@ const PanelViewPage: React.FC = () => {
                         <button
                             className="px-1 py-1 rounded bg-white hover:bg-gray-100 
                                 gray shadow text-[var(--color-foreground)]"
-                            
                             onClick={() => setZoom(z => Math.min(1, z * 1.1))}
                         >
                             <ZoomIn size={20} />
@@ -133,7 +118,6 @@ const PanelViewPage: React.FC = () => {
                         <button
                             className="px-1 py-1 rounded bg-white hover:bg-gray-100 
                                 gray shadow text-[var(--color-foreground)]"
-
                             onClick={() => setZoom(z => Math.max(0.5, z * 0.9))}
                         >
                             <ZoomOut size={20} />
@@ -191,6 +175,7 @@ const PanelViewPage: React.FC = () => {
                         fill="url(#gridBold)"
                     />
 
+                    {/* Columns */}
                     <g transform={`translate(${marginX}, ${marginY})`}>
                         {(() => {
                             let offsetX = 0;
@@ -220,7 +205,7 @@ const PanelViewPage: React.FC = () => {
                                             fill="#023059"
                                             style={{ fontWeight: 400 }}
                                         >
-                                            {`Coluna ${col.position} - ${col.type}`}
+                                            {`Coluna ${col.position} - ${col.typical}`}
                                         </text>
 
                                         <>

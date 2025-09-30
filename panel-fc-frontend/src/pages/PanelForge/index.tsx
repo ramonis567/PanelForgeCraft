@@ -18,6 +18,7 @@ const initialPanelConfig: PanelConfiguration = {
     description: "",
     tensaoNominal: "",
     icc: "",
+    structure: "PA4",
     columns: [],
     metadata: {
         createdBy: "User",
@@ -48,10 +49,14 @@ function PanelForgePage() {
     const [availableColumns, setAvailableColumns] = useState<CatalogColumn[]>([]);
 
     const [newColumn, setNewColumn] = useState<Partial<PanelColumn>>({
-        name: "",
-        typical: "",
         position: 1,
-        dimensions: { height: 2000, width: 800, depth: 600 },
+        columnTag: "",
+        columnFunction: "",
+        current_load: "",
+        power_load_kw: "",
+        main_equipment: "",
+        secondary_equipments: [],
+        dimensions: { height: 2000, width: 800, depth: 600, weight: 2000 },
         modules: []
     });
 
@@ -69,12 +74,18 @@ function PanelForgePage() {
             ...prev,
             [name]: value
         }));
+
+        console.log("MUDANÇA")
+        console.log(config)
     };
 
     const handleEditColumn = (column: PanelColumn) => {
         setEditingColumnId(column.columnId);
         setNewColumn({ ...column });
         setShowModal(true);
+        
+        console.log("EDIT")
+        console.log(config)
     };
 
     const handleDeleteColumn = (column: PanelColumn) => {
@@ -92,6 +103,9 @@ function PanelForgePage() {
                 metadata: { ...prev.metadata, lastModifiedAt: new Date() } 
             };
         });
+
+        console.log("DELETE")
+        console.log(config)
     };
 
     const handleReorderColumns = (newOrder: PanelColumn[]) => {
@@ -110,6 +124,8 @@ function PanelForgePage() {
 
         savePanel(config);
 
+        console.log("ENVIADO")
+        console.log(config)
         // In the future, send the data to the backend
     };
 
@@ -119,11 +135,14 @@ function PanelForgePage() {
                 ...column,
                 columnId: `C-${Date.now()}`,
                 position: column.position + 1,
-                name: `${column.name} (Cópia)`
+                columnTag: `${column.columnTag} (Cópia)`,
             };
 
             const newCols = [...prev.columns, duplicated];
             const renumbered = renumberColumns(newCols);
+
+            console.log("DUPLICADO")
+            console.log(renumbered)
 
             return {
                 ...prev,
@@ -212,9 +231,9 @@ function PanelForgePage() {
                             <button 
                                 onClick={() => { 
                                     setNewColumn({
-                                        typical: "",
+                                        columnFunction: "",
                                         position: config.columns.length + 1,
-                                        dimensions: { height: 2000, width: 800, depth: 600 },
+                                        dimensions: { height: 2000, width: 800, depth: 600, weight: 2000 },
                                         modules: []
                                     })
                                     setEditingColumnId(null);
@@ -285,14 +304,19 @@ function PanelForgePage() {
                 onSelect={(col) => {
                     setConfig((prev) => {
                         const newCol: PanelColumn = {
-                            columnId: `C-${Date.now()}`,
-                            name: col.funcao_principal,
-                            typical: col.equipto_principal,
                             position: prev.columns.length + 1,
+                            columnId: `C-${Date.now()}`,
+                            columnTag: "COL-X",
+                            columnFunction: col.funcao_principal,
+                            main_equipment: col.equipto_principal,
+                            secondary_equipments: col.equipto_secundario,
+                            current_load: col.corrente_carga,
+                            power_load_kw: col.potencia_carga,
                             dimensions: {
                                 height: col.altura_mm__ver_acessorios,
                                 width: col.largura_mm,
-                                depth: col.profundidade_mm_considerando_as_portas
+                                depth: col.profundidade_mm_considerando_as_portas,
+                                weight: col.peso
                             },
                             modules: []
                         };
@@ -316,7 +340,7 @@ function PanelForgePage() {
                         if (editingColumnId) {
                             const edited = prev.columns.map(c =>
                                 c.columnId === editingColumnId 
-                                ? { ...c, ...updatedColumn, name: updatedColumn.name || c.name } as PanelColumn 
+                                ? { ...c, ...updatedColumn, name: updatedColumn.columnTag || c.columnTag } as PanelColumn 
                                 : c
                             );
 
@@ -328,10 +352,14 @@ function PanelForgePage() {
                             const columnId = `C-${Date.now()}`;
                             const columnToAdd: PanelColumn = {
                                 columnId,
-                                name: updatedColumn.name || `Coluna ${prev.columns.length + 1}`,
-                                typical: updatedColumn.typical || "Padrão",
                                 position: config.columns.length + 1,
-                                dimensions: updatedColumn.dimensions || { height: 2000, width: 800, depth: 600 },
+                                columnTag: updatedColumn.columnTag || `Coluna ${prev.columns.length + 1}`,
+                                columnFunction: updatedColumn.columnFunction || "Padrão",
+                                current_load: updatedColumn.current_load || "",
+                                power_load_kw: updatedColumn.power_load_kw || "",
+                                main_equipment: updatedColumn.main_equipment || "",
+                                secondary_equipments: updatedColumn.secondary_equipments || [],
+                                dimensions: updatedColumn.dimensions || { height: 2000, width: 800, depth: 600, weight: 2000 },
                                 modules: updatedColumn.modules || []
                             };
 
@@ -345,9 +373,9 @@ function PanelForgePage() {
                     setShowModal(false);
                     setEditingColumnId(null);
                     setNewColumn({
-                        typical: "",
+                        columnFunction: "",
                         position: config.columns.length + 1,
-                        dimensions: { height: 2000, width: 800, depth: 600 },
+                        dimensions: { height: 2000, width: 800, depth: 600, weight: 2000 },
                         modules: []
                     });
                 }}

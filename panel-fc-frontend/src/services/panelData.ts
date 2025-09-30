@@ -6,10 +6,13 @@ export interface CatalogColumn {
   icc_ka: string;
   funcao_principal: string;
   equipto_principal: string;
-  equipto_secundario: string;
+  equipto_secundario: string[];
+  corrente_carga: string;
+  potencia_carga: string;
   largura_mm: number;
   altura_mm__ver_acessorios: number;
   profundidade_mm_considerando_as_portas: number;
+  peso: number;
   acessorio_1?: string | null;
   acessorio_2?: string | null;
   acessorio_3?: string | null;

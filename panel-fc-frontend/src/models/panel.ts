@@ -1,19 +1,27 @@
 export interface PanelModule {
     moduleId: string;
     name: string;
-    size: number;
+    height: number;
+    width: number;
+    depth: number;
+    weight: number;
 }
 
 interface ColumnDimensions {
     height: number;
     width: number;
     depth: number;
+    weight: number;
 }
 
 export interface PanelColumn {
     columnId: string;
-    name: string;
-    typical: string;
+    columnTag: string;
+    columnFunction: string;
+    current_load: string;
+    power_load_kw: string;    
+    main_equipment: string;
+    secondary_equipments: string[];
     dimensions: ColumnDimensions;
     position: number;
     modules: PanelModule[];
@@ -30,6 +38,7 @@ export interface PanelConfiguration {
     name: string;
     tensaoNominal: string;
     icc: string;
+    structure: string;
     description?: string;
     columns: PanelColumn[];
     metadata: PanelMetadata;

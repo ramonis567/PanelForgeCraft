@@ -40,7 +40,7 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
         onChange({
             modules:[
                 ...(column.modules || []),
-                { moduleId: `M-${Date.now()}`, name: "", size: 0 }
+                { moduleId: `M-${Date.now()}`, name: "", height: 0, width: 0, depth: 0, weight: 0 }
             ],
         });
     };
@@ -70,101 +70,184 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
                 >
                     <X size={20} />
                 </button>
-                <h2 className="text-xl font-semibold mb-4">Adicionar / Editar Coluna</h2>
+                <h2 className="text-xl font-semibold mb-4">Editar Coluna</h2>
+
+                <div>
+                    <label className="block text-sm font-medium">Posição</label>
+                    <input
+                        type="number"
+                        name="position"
+                        disabled
+                        value={column.position || ""}
+                        onChange={handleFieldChange}
+                        className="mt-1 block w-full rounded border bg-gray-200 border-gray-300 p-2 "
+                    />
+                </div>
 
                 <div className="space-y-3">
-                    <div>
-                        <label className="block text-sm font-medium">Nome da Coluna</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={column.name || ""}
-                            onChange={(e) => onChange({ name: e.target.value })}
-                            className="mt-1 block w-full rounded border border-gray-200 p-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Típico</label>
-                        <input
-                            type="text"
-                            name="typical"
-                            value={column.typical || ""}
-                            onChange={(e) => onChange({ typical: e.target.value })}
-                            className="mt-1 block w-full rounded border border-gray-200 p-2"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium">Posição</label>
-                        <input
-                            type="number"
-                            name="position"
-                            disabled
-                            value={column.position || ""}
-                            onChange={handleFieldChange}
-                            className="mt-1 block w-full rounded border bg-gray-200 border-gray-300 p-2 "
-                        />
-                    </div>
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 gap-1">
                         <div>
-                            <label className="block text-sm font-medium">Altura (mm)</label>
+                            <label className="block text-sm font-medium">Tag da Coluna</label>
+                            <input
+                                type="text"
+                                name="columnTag"
+                                value={column.columnTag || ""}
+                                onChange={(e) => onChange({ columnTag: e.target.value })}
+                                className="mt-1 block w-full rounded border border-gray-200 p-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Função</label>
+                            <input
+                                type="text"
+                                name="columnFunction"
+                                value={column.columnFunction || ""}
+                                onChange={(e) => onChange({ columnFunction: e.target.value })}
+                                className="mt-1 block w-full rounded border border-gray-200 p-2"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-1">
+                        <div>
+                            <label className="block text-sm font-medium">Equipamento Principal</label>
+                            <input
+                                type="text"
+                                name="main_equipment"
+                                value={column.main_equipment || ""}
+                                onChange={(e) => onChange({ columnTag: e.target.value })}
+                                className="mt-1 block w-full rounded border border-gray-200 p-2"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Equip`s. Secundários</label>
+                            <input
+                                type="text"
+                                name="secondary_equipments"
+                                value={column.secondary_equipments || ""}
+                                onChange={(e) => onChange({ columnFunction: e.target.value })}
+                                className="mt-1 block w-full rounded border border-gray-200 p-2"
+                            />
+                        </div>
+                    </div>
+                        
+                    <div className="grid grid-cols-2 gap-1">
+                        <div>
+                            <label className="block text-sm font-medium">Corrente Deriv. Carga (A)</label>
+                            <input
+                                type="text"
+                                name="current_load"
+                                value={column.current_load || ""}
+                                onChange={handleFieldChange}
+                                className="mt-1 block w-full rounded border border-gray-200 p-2 disabled:bg-gray-200"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Potência Carga (kW)</label>
+                            <input
+                                type="text"
+                                name="power_load_kw"
+                                value={column.power_load_kw || ""}
+                                onChange={handleFieldChange}
+                                className="mt-1 block w-full rounded border border-gray-200 p-2 disabled:bg-gray-200"
+                            />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1">
+                        <div>
+                            <label className="block text-sm font-medium">Alt. (mm)</label>
                             <input
                                 type="number"
                                 name="height"
                                 value={column.dimensions?.height || ""}
                                 onChange={handleFieldChange}
-                                className="mt-1 block w-full rounded border border-gray-200 p-2"
+                                disabled
+                                className="mt-1 block w-full rounded border border-gray-200 p-2 disabled:bg-gray-200"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium">Largura (mm)</label>
+                            <label className="block text-sm font-medium">Larg. (mm)</label>
                             <input
                                 type="number"
                                 name="width"
                                 value={column.dimensions?.width || ""}
                                 onChange={handleFieldChange}
-                                className="mt-1 block w-full rounded border border-gray-200 p-2"
+                                disabled
+                                className="mt-1 block w-full rounded border border-gray-200 p-2 disabled:bg-gray-200"
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium">Profundidade (mm)</label>
+                            <label className="block text-sm font-medium">Prof. (mm)</label>
                             <input
                                 type="number"
                                 name="depth"
                                 value={column.dimensions?.depth || ""}
                                 onChange={handleFieldChange}
-                                className="mt-1 block w-full rounded border border-gray-200 p-2"
+                                disabled
+                                className="mt-1 block w-full rounded border border-gray-200 p-2 disabled:bg-gray-200"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium">Peso (kg)</label>
+                            <input
+                                type="number"
+                                name="depth"
+                                value={column.dimensions?.weight || ""}
+                                onChange={handleFieldChange}
+                                disabled
+                                className="mt-1 block w-full rounded border border-gray-200 p-2 disabled:bg-gray-200"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium mb-1">Módulos</label>
+                        <label className="block text-sm font-medium mb-1">Acessórios</label>
                         {(column.modules || []).map((mod, idx) => (
-                            <div key={mod.moduleId} className="flex gap-2 mb-2">
-                                <input
-                                    type="text"
-                                    placeholder="Nome"
-                                    value={mod.name}
-                                    onChange={(e) =>
-                                        handleModuleChange(idx, "name", e.target.value)
-                                    }
-                                    className="flex-1 rounded border border-gray-200 p-2"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="Tamanho"
-                                    value={mod.size}
-                                    onChange={(e) =>
-                                        handleModuleChange(idx, "size", e.target.value)
-                                    }
-                                    className="w-24 rounded border border-gray-200 p-2"
-                                />
-                                <button
-                                    onClick={() => handleRemoveModule(idx)}
-                                    className="text-red-600 hover:text-red-800"
-                                >
-                                    <X size={20} />
-                                </button>
+                            <div key={mod.moduleId} className="flex gap-1 mb-2 items-center">
+                                <div>
+                                    <label className="block text-sm font-medium">Nome</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Nome"
+                                        value={mod.name}
+                                        onChange={(e) =>
+                                            handleModuleChange(idx, "name", e.target.value)
+                                        }
+                                        className="flex-1 rounded border border-gray-200 p-2"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium">Altura (mm)</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Tamanho"
+                                        value={mod.height}
+                                        onChange={(e) =>
+                                            handleModuleChange(idx, "height", e.target.value)
+                                        }
+                                        className="w-20 rounded border border-gray-200 p-2"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium">Peso (kg)</label>
+                                    <input
+                                        type="text"
+                                        placeholder="Tamanho"
+                                        value={mod.weight}
+                                        onChange={(e) =>
+                                            handleModuleChange(idx, "weight", e.target.value)
+                                        }
+                                        className="w-20 rounded border border-gray-200 p-2"
+                                    />
+                                </div>
+                                <div className="mt-6">
+                                    <button
+                                        onClick={() => handleRemoveModule(idx)}
+                                        className="text-red-600 hover:text-red-800"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                </div>
                             </div>
                         ))}
 

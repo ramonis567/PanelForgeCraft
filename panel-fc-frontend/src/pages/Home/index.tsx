@@ -71,11 +71,11 @@ const Home = () => {
 
     const filtered = panels.filter(
         (p) =>
-            p.name.toLowerCase().includes(search.toLowerCase()) ||
-            (p.description && p.description.toLowerCase().includes(search.toLowerCase())) ||
-            p.id.toLowerCase().includes(search.toLowerCase()
-        )
-    );
+            p.name?.toLowerCase().includes(search.toLowerCase()) ||
+            (p.description?.toLowerCase().includes(search.toLowerCase())) ||
+            p.id?.toLowerCase().includes(search.toLowerCase())
+    )
+    
     
     return (
         <AppLayout>

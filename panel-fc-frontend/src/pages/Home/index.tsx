@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Plus, Eye, Pencil, Trash2, Copy } from 'lucide-react';
 
 import AppLayout from '../_common/layouts/AppLayout';
+import PanelInitModal from '../../components/PanelModal';
 import type { PanelConfiguration } from '../../models/panel';
 import { loadAllPanels, savePanel, deletePanel } from '../../utils/storage';
 import { createBlankPanel, generatePanelId } from '../../utils/initPanel';
@@ -10,6 +11,7 @@ import { createBlankPanel, generatePanelId } from '../../utils/initPanel';
 const Home = () => {
     const [panels, setPanels] = useState<PanelConfiguration[]>([]);
     const [search, setSearch] = useState('');
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
     const loadPanelsList = () => {
@@ -26,9 +28,16 @@ const Home = () => {
 
     useEffect(() => { loadPanelsList() }, [])
 
-    const createNewPanel = () => {
+    const handleOpenModal = () => {
+        setShowModal(true);
+    }
+
+    const handleConfirmInit = (tensao: string, icc: string) => {
         const newPanel = createBlankPanel();
+        newPanel.tensaoNominal = tensao;
+        newPanel.icc = icc;
         savePanel(newPanel);
+        setShowModal(false);
         navigate(`/panel-forge/${newPanel.id}`);
     }
 
@@ -70,6 +79,12 @@ const Home = () => {
     
     return (
         <AppLayout>
+            <PanelInitModal
+                isOpen={showModal}
+                onClose={() => setShowModal(false)}
+                onConfirm={handleConfirmInit}
+            />
+
             <header className="h-16 rounded-xl bg-[var(--color-surface-2)] border-b border-gray-200 flex items-center px-4 mb-2">
                 <span className="font-medium text-gray-800 flex justify-between gap-3 w-full">
                     <h1 className="text-2xl text-[var(--color-bg)]"><b>{}</b></h1>
@@ -85,7 +100,7 @@ const Home = () => {
                     className="flex items-center justify-center gap-3 px-3 py-1 rounded 
                     bg-[var(--color-accent-600)] text-[var(--color-alt-bg)]  
                     hover:bg-[var(--color-brand-800)] gray shadow w-full"
-                    onClick={createNewPanel}
+                    onClick={handleOpenModal}
                 >
                     <Plus size={24} /> Novo Painel
                 </button>

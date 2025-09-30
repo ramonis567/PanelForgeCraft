@@ -120,14 +120,14 @@ const PanelViewPage: React.FC = () => {
                         <button
                             className="px-1 py-1 rounded bg-white hover:bg-gray-100 
                                 gray shadow text-[var(--color-foreground)]"
-                            onClick={() => setZoom(z => Math.min(1, z * 1.1))}
+                            onClick={() => setZoom(z => Math.min(1, z * 1.05))}
                         >
                             <ZoomIn size={20} />
                         </button>
                         <button
                             className="px-1 py-1 rounded bg-white hover:bg-gray-100 
                                 gray shadow text-[var(--color-foreground)]"
-                            onClick={() => setZoom(z => Math.max(0.5, z * 0.9))}
+                            onClick={() => setZoom(z => Math.max(0.5, z * 0.95))}
                         >
                             <ZoomOut size={20} />
                         </button>

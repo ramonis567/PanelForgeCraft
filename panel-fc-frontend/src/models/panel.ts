@@ -28,6 +28,8 @@ interface PanelMetadata {
 export interface PanelConfiguration {
     id: string;
     name: string;
+    tensaoNominal: string;
+    icc: string;
     description?: string;
     columns: PanelColumn[];
     metadata: PanelMetadata;

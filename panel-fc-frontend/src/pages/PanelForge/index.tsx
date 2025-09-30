@@ -1,18 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CirclePlus, Cog, ListRestart, Group, House, Eye } from "lucide-react";
 
 import AppLayout from "../_common/layouts/AppLayout";
 import ColumnModal from "../../components/ColumnModal"
 import ColumnList from "../../components/ColumnList";
+import CatalogModal from "../../components/CatalogModal";
 
 import { type PanelConfiguration, type PanelColumn, renumberColumns } from "../../models/panel";
 import { loadPanel, savePanel, clearPanelConfig } from "../../utils/storage";
+import { filterCatalog } from "../../services/panelData";
+import type { CatalogColumn } from "../../services/panelData";
 
 const initialPanelConfig: PanelConfiguration = {
     id: "",
     name: "",
     description: "",
+    tensaoNominal: "",
+    icc: "",
     columns: [],
     metadata: {
         createdBy: "User",
@@ -30,14 +35,17 @@ function PanelForgePage() {
 
     useEffect(() => {
         if(!panelId) return;
-        const loaded = loadPanel(panelId);
 
+        const loaded = loadPanel(panelId);
         setConfig(loaded ?? initialPanelConfig);
 
     }, [panelId]);
 
     const [showModal, setShowModal] = useState(false);
     const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
+
+    const [showCatalog, setShowCatalog] = useState(false);
+    const [availableColumns, setAvailableColumns] = useState<CatalogColumn[]>([]);
 
     const [newColumn, setNewColumn] = useState<Partial<PanelColumn>>({
         name: "",
@@ -46,6 +54,14 @@ function PanelForgePage() {
         dimensions: { height: 2000, width: 800, depth: 600 },
         modules: []
     });
+
+    const handleCatalogModal = () => {
+        const type = "PA4";
+        const filtered = filterCatalog(type, config.tensaoNominal, config.icc);
+
+        setAvailableColumns(filtered);
+        setShowCatalog(true);
+    }
 
     const handlePanelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -201,8 +217,9 @@ function PanelForgePage() {
                                         dimensions: { height: 2000, width: 800, depth: 600 },
                                         modules: []
                                     })
-                                    setEditingColumnId(null); 
-                                    setShowModal(true); 
+                                    setEditingColumnId(null);
+                                    handleCatalogModal();
+                                    // setShowModal(true); 
                                 }}
                                 className="
                                     flex-13 px-4 py-2 flex items-center justify-center 
@@ -260,6 +277,34 @@ function PanelForgePage() {
                     </div>
                 </div>
             </div>
+
+            <CatalogModal 
+                isOpen={showCatalog}
+                catalog={availableColumns}
+                onClose={() => setShowCatalog(false)}
+                onSelect={(col) => {
+                    setConfig((prev) => {
+                        const newCol: PanelColumn = {
+                            columnId: `C-${Date.now()}`,
+                            name: col.funcao_principal,
+                            typical: col.equipto_principal,
+                            position: prev.columns.length + 1,
+                            dimensions: {
+                                height: col.altura_mm__ver_acessorios,
+                                width: col.largura_mm,
+                                depth: col.profundidade_mm_considerando_as_portas
+                            },
+                            modules: []
+                        };
+                        return {
+                            ...prev,
+                            columns: [...prev.columns, newCol],
+                            metadata: { ...prev.metadata, lastModifiedAt: new Date() }
+                        };
+                    });
+                    setShowCatalog(false);
+                }}
+            />
 
             {/* Modal for add column */}
             <ColumnModal 

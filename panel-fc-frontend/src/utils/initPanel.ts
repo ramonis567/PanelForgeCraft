@@ -13,6 +13,8 @@ const createBlankPanel = (): PanelConfiguration => {
         id: generatePanelId(),
         name: '',
         description: '',
+        tensaoNominal: '',
+        icc: '',
         columns: [],
         metadata: {
             createdBy: 'User',

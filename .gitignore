@@ -27,3 +27,5 @@ dist-ssr
 __pycache__/
 ex1
 ex2
+
+.env

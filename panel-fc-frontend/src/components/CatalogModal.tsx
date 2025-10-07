@@ -98,10 +98,10 @@ const CatalogModal: React.FC<Props> = ({ isOpen, catalog, onClose, onSelect }) =
 									<b>Equipamentos Secundários:</b> {c.equipto_secundario}
 								</p>
 								<p className="text-sm text-gray-700">
-									<b>Corrente Carga:</b> {c.corrente_carga}
+									<b>Corrente Carga:</b> {c.corrente_derivacao__carga_a}
 								</p>
 								<p className="text-sm text-gray-700">
-									<b>Potência Carga:</b> {c.potencia_carga}
+									<b>Potência Carga:</b> {c.potencia_carga_kw}
 								</p>
 
 								<p className="text-sm text-gray-600 mt-1">

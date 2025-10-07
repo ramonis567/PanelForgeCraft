@@ -115,7 +115,7 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
                                 type="text"
                                 name="main_equipment"
                                 value={column.main_equipment || ""}
-                                onChange={(e) => onChange({ columnTag: e.target.value })}
+                                onChange={(e) => onChange({ main_equipment: e.target.value })}
                                 className="mt-1 block w-full rounded border border-gray-200 p-2"
                             />
                         </div>
@@ -125,7 +125,7 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
                                 type="text"
                                 name="secondary_equipments"
                                 value={column.secondary_equipments || ""}
-                                onChange={(e) => onChange({ columnFunction: e.target.value })}
+                                onChange={(e) => onChange({ secondary_equipments: e.target.value.split(",").map(v => v.trim()) })}
                                 className="mt-1 block w-full rounded border border-gray-200 p-2"
                             />
                         </div>
@@ -191,7 +191,7 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
                             <label className="block text-sm font-medium">Peso (kg)</label>
                             <input
                                 type="number"
-                                name="depth"
+                                name="weight"
                                 value={column.dimensions?.weight || ""}
                                 onChange={handleFieldChange}
                                 disabled
@@ -219,8 +219,8 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
                                 <div>
                                     <label className="block text-sm font-medium">Altura (mm)</label>
                                     <input
-                                        type="text"
-                                        placeholder="Tamanho"
+                                        type="number"
+                                        placeholder="Altura"
                                         value={mod.height}
                                         onChange={(e) =>
                                             handleModuleChange(idx, "height", e.target.value)
@@ -231,8 +231,8 @@ const ColumnModal: React.FC<ColumnModalProps> = ({
                                 <div>
                                     <label className="block text-sm font-medium">Peso (kg)</label>
                                     <input
-                                        type="text"
-                                        placeholder="Tamanho"
+                                        type="number"
+                                        placeholder="Peso"
                                         value={mod.weight}
                                         onChange={(e) =>
                                             handleModuleChange(idx, "weight", e.target.value)

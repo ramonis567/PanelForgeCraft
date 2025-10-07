@@ -7,8 +7,8 @@ export interface CatalogColumn {
   funcao_principal: string;
   equipto_principal: string;
   equipto_secundario: string[];
-  corrente_carga: string;
-  potencia_carga: string;
+  corrente_derivacao__carga_a: string;
+  potencia_carga_kw: string;
   largura_mm: number;
   altura_mm__ver_acessorios: number;
   profundidade_mm_considerando_as_portas: number;

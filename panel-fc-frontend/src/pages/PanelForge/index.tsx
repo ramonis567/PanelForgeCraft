@@ -310,8 +310,8 @@ function PanelForgePage() {
                             columnFunction: col.funcao_principal,
                             main_equipment: col.equipto_principal,
                             secondary_equipments: col.equipto_secundario,
-                            current_load: col.corrente_carga,
-                            power_load_kw: col.potencia_carga,
+                            current_load: col.corrente_derivacao__carga_a,
+                            power_load_kw: col.potencia_carga_kw,
                             dimensions: {
                                 height: col.altura_mm__ver_acessorios,
                                 width: col.largura_mm,

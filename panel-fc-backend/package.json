@@ -4,8 +4,10 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lint": "eslint . --ext .ts"
   },
   "keywords": [],
   "author": "",
@@ -17,17 +19,23 @@
     "dxf-writer": "^1.18.4",
     "express": "^5.1.0",
     "mongodb": "^6.20.0",
-    "mongoose": "^8.19.1",
+    "mongoose": "^8.19.2",
+    "morgan": "^1.10.1",
     "multer": "^2.0.2",
     "nanoid": "^5.1.6",
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.17.2"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
     "@types/mongoose": "^5.11.96",
-    "@types/node": "^24.7.0",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.9.1",
+    "eslint": "^9.38.0",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.3"
   }
 }

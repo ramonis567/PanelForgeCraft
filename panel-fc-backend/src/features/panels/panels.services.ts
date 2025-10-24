@@ -14,7 +14,7 @@ export class PanelService {
   }
 
   static async update(id: string, data: any) {
-    return Panel.findByIdAndUpdate(id, data, { new: true });
+    return Panel.findByIdAndUpdate(id, data, { new: true, runValidators: true });
   }
 
   static async delete(id: string) {

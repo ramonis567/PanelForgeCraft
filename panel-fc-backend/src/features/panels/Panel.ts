@@ -33,6 +33,7 @@ export interface IPanel extends Document {
     icc_ka: string;
     structure: string;
     columns: IColumn[];
+    totalColumns: number;
     metadata: {
         createdBy: mongoose.Types.ObjectId;
         createdAt: Date;
@@ -62,10 +63,10 @@ const ColumnSchema = new Schema<IColumn>(
         current_load: { type: String },
         power_load: { type: String },
         dimensions: {
-        height: Number,
-        width: Number,
-        depth: Number,
-        weight: Number,
+            height: { type: Number, min: 1 },
+            width: { type: Number, min: 1 },
+            depth: { type: Number, min: 1 },
+            weight: { type: Number, min: 0 },
         },
         modules: { type: [ModuleSchema], default: [] },
     },
@@ -80,13 +81,52 @@ const PanelSchema = new Schema<IPanel>(
         icc_ka: { type: String, required: true },
         structure: { type: String, required: true },
         columns: { type: [ColumnSchema], default: [] },
+        totalColumns: { type: Number, default: 0 },
         metadata: {
-        createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-        createdAt: { type: Date, default: Date.now },
-        lastModifiedAt: { type: Date, default: Date.now },
+            createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
+            createdAt: { type: Date, default: Date.now },
+            lastModifiedAt: { type: Date, default: Date.now },
         },
     },
-    { collection: "panels" }
+    { 
+        collection: "panels", 
+        timestamps: {
+            createdAt: "metadata.createdAt",
+            updatedAt: "metadata.lastModifiedAt",
+        },
+    }
 );
+
+// Hook to update totalColumns and lastModifiedAt before saving
+PanelSchema.pre("save", function (next) {
+    this.metadata.lastModifiedAt = new Date();
+    this.totalColumns = this.columns.length;
+    next();
+});
+
+
+PanelSchema.pre("findOneAndUpdate", function (next) {
+  const update: any = this.getUpdate() || {};
+
+  const $set = update.$set ?? update;
+  if (Array.isArray($set.columns)) {
+    $set.totalColumns = $set.columns.length;
+  }
+
+  if (update.$set) update.$set = $set;
+  else Object.assign(update, $set);
+
+  next();
+});
+
+// Hook to populate fake user data automatically
+// PanelSchema.pre(/^find/, function (next) {
+//     this.populate({
+//         path: "metadata.createdBy",
+//         select: "name email role", // example projection
+//         options: { strictPopulate: false }, // avoid error if User model not present
+//     });
+//     next();
+// });
 
 export default mongoose.model<IPanel>("Panel", PanelSchema);

@@ -1,22 +1,22 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-export interface IProduct extends Document {
-    voltage_kv: string;
-    icc_ka: string;
-    function: string;
-    load_current: string;
-    load_power: string;
-    main_equipment: string;
-    sec_equipments: string[];
-    width_mm: number;
-    height_mm: number;
-    depth_mm: number;
-    weight_kg: number;
-    structure: string;
-    accessories?: string[];
-}
+// export interface ICatalog extends Document {
+//     voltage_kv: string;
+//     icc_ka: string;
+//     function: string;
+//     load_current: string;
+//     load_power: string;
+//     main_equipment: string;
+//     sec_equipments: string[];
+//     width_mm: number;
+//     height_mm: number;
+//     depth_mm: number;
+//     weight_kg: number;
+//     structure: string;
+//     accessories?: string[];
+// }
 
-const ProductSchema = new Schema<IProduct>(
+const CatalogSchema = new Schema(
     {
         voltage_kv: { type: String, required: true },
         icc_ka: { type: String, required: true },
@@ -37,6 +37,6 @@ const ProductSchema = new Schema<IProduct>(
     }
 );
 
-ProductSchema.index({ structure: 1, voltage_kv: 1, icc_ka: 1 });
+const Catalog = mongoose.model("Catalog", CatalogSchema);
 
-export default mongoose.model<IProduct>("Product", ProductSchema);
+export default Catalog;

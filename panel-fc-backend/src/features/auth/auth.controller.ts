@@ -6,7 +6,15 @@ import User from "./User";
 export class AuthController {
     static async login(req: Request, res: Response) {
         try {
+            const jwtSecret = process.env.JWT_SECRET;
+
+            if (!jwtSecret) {
+                console.error("JWT_SECRET is not defined in environment variables");
+                return res.status(500).json({ message: "Internal server error" });
+            }
+
             const { email, password } = req.body;
+
             if(!email || !password) {
                 return res.status(400).json({ message: "Email and password are required" });
             }
@@ -25,8 +33,8 @@ export class AuthController {
 
             const token = jwt.sign(
                 { id: user._id, role: user.role, email: user.email, name: user.name },
-                process.env.JWT_SECRET as Secret,
-                { expiresIn: ENV.TOKEN_EXPIRATION || "1d" }
+                jwtSecret,
+                { expiresIn: "1d" }
             );
 
         } catch (error) {

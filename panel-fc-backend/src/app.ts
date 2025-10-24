@@ -1,8 +1,8 @@
 import express, { Application } from "express";
 import cors from "cors";
 import morgan from "morgan";
-import routes from "./routes";
-import { connectDB } from "./config/db";
+import routes from "./shared/routes";
+import { connectDB } from "./shared/config/db";
 
 const app: Application = express();
 

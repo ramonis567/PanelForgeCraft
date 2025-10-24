@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { CatalogService } from "../services/catalog.services";
+import { CatalogService } from "./catalog.services";
 
 export class CatalogController {
     static async getAll(req: Request, res: Response) {

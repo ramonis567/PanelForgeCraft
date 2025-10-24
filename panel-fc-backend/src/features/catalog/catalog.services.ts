@@ -1,4 +1,4 @@
-import Catalog from "../models/Catalog";
+import Catalog from "./Catalog";
 
 export class CatalogService {
     static async getAll(filters: any = {}) {

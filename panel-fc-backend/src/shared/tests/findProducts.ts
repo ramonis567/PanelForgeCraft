@@ -1,5 +1,5 @@
 import { connectDB } from "../config/db";
-import Catalog from "../models/Catalog";
+import Catalog from "../../features/catalog/Catalog";
 
 (async () => {
     await connectDB();

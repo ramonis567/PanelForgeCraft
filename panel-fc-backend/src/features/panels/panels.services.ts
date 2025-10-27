@@ -1,8 +1,9 @@
+// src/modules/panels/panels.services.ts
 import Panel from "./Panel";
 
 export class PanelService {
-  static async getAll() {
-    return Panel.find();
+  static async getAllByOwner(userId: string) {
+    return Panel.find({ "metadata.createdBy": userId }).sort({ updatedAt: -1 });
   }
 
   static async getById(id: string) {

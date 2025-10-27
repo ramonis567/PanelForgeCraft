@@ -10,10 +10,11 @@ export interface IUser extends Document {
     created_at: Date;
     last_login?: Date;
     activated: boolean;
-    comparePassword(candidate: string): Promise<boolean>;
 
     // virtual write-only:
     password?: string;
+    comparePassword(candidate: string): Promise<boolean>;
+
 }
 
 const UserSchema = new Schema<IUser>(
@@ -41,12 +42,22 @@ const UserSchema = new Schema<IUser>(
 // Write-only virtual: set plain password -> store bcrypt hash in password_hash
 UserSchema.virtual("password")
 .set(function (this: IUser, plain: string) {
-    const salt = bcrypt.genSaltSync(10);
-    this.password_hash = bcrypt.hashSync(plain, salt);
+    (this as any)._password = plain;
+});
+
+UserSchema.pre("save", async function (next) {
+    const user = this as IUser;
+
+    if ((user as any)._password) {
+        const salt = await bcrypt.genSalt(10);
+        user.password_hash = await bcrypt.hash((user as any)._password, salt);
+    }
+
+    next();
 });
 
 // Instance method: compare password
-UserSchema.methods.comparePassword = function (candidate: string) {
+UserSchema.methods.comparePassword = async function (candidate: string) {
     return bcrypt.compare(candidate, this.password_hash);
 };
 

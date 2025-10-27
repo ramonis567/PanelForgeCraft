@@ -1,12 +1,18 @@
 import { Router } from "express";
 import { PanelController } from "./panels.controller";
+import { authenticate } from "../../shared/middlewares/auth";
+import { requireOwner } from "../../shared/middlewares/ownershipGuard";
 
 const router = Router();
 
+router.use(authenticate);
+
 router.get("/", PanelController.getAll);
-router.get("/:id", PanelController.getById);
 router.post("/", PanelController.create);
-router.put("/:id", PanelController.update);
-router.delete("/:id", PanelController.delete);
+
+router.route("/:id")
+.get(requireOwner, PanelController.getById)
+.put(requireOwner, PanelController.update)
+.delete(requireOwner, PanelController.delete);
 
 export default router;
